@@ -26,6 +26,13 @@ and a few retro touches from old consoles and games.
 
 ---
 
+> [!NOTE]
+> **About the images in the screenshots.** The wallpapers, the fastfetch logo, the
+> battery menu picture and the profile picture are my own choices, mostly made by other
+> creators. They are **not included** in arch-melon, which installs its own defaults.
+> - Halo: Combat Evolved wallpapers by [u/Comfortable_Part1350](https://www.reddit.com/r/halo/comments/1qlq7xp/halo_ce_wallpapers/)
+> - Dark Souls bonfire pixel art (battery menu) by [Alexander McDonald](https://www.artstation.com/artwork/YG2NNb) ([@cannonbreed](https://x.com/cannonbreed))
+
 ## 📸 Screenshots
 
 <img src="assets/screenshots/01-desktop.webp" alt="Desktop" width="100%">
@@ -49,8 +56,6 @@ and a few retro touches from old consoles and games.
 <img src="assets/screenshots/12-notification.webp" alt="Notification"><br>
 <b>Notifications</b> (mako)
 </p>
-
-<sub>Wallpapers, the fastfetch logo, the battery menu picture and the profile picture in these screenshots are the author's own choices and are not included; arch-melon installs its own defaults.</sub>
 
 ---
 
