@@ -554,13 +554,14 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
                           password window).
     Packages ............ yay (AUR, installed if missing), pacman-contrib
                           (checkupdates, used by update-count).
+    google-chrome ....... Super+B.
+    ccusage ............. Token counts for the AI pill and its cost table
+                          (with a Claude Code login; without one the pill is
+                          a plain "󰚩 AI", ready for another agent).
   Extras (the installer asks)
-    google-chrome ....... Super+B. betterbird-bin: Super+M.
+    betterbird-bin ...... Super+M.
     Docker .............. docker, docker-compose, docker-buildx, lazydocker
                           (Super+Ctrl+O).
-    ccusage ............. Claude usage for the Claude pill and its cost table
-                          (needs a Claude Code login; without one the pill
-                          is a plain "󰚩 AI", ready for another agent).
   Not installed (pick for your hardware)
     VA-API driver ....... For screenrec: intel-media-driver (Intel) or
                           libva-mesa-driver (AMD). Check with vainfo.

@@ -1,6 +1,3 @@
-# Apps some binds and modules open; install.sh asks before installing.
-# Super+B browser and Super+M mail (change "browser" / "mailClient" in hyprland.lua to use others)
-google-chrome
+# Optional apps; install.sh asks before installing.
+# Super+M mail (change "mailClient" in hyprland.lua to use another one)
 betterbird-bin
-# Claude plan pill in Waybar and its cost table (needs a Claude Code login)
-ccusage

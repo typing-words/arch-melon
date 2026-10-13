@@ -2,3 +2,7 @@
 bibata-cursor-theme-bin
 papirus-folders
 nautilus-open-any-terminal
+# Super+B browser (change "browser" in hyprland.lua to use another one)
+google-chrome
+# Usage numbers for the AI pill in Waybar and its cost table
+ccusage
