@@ -28,10 +28,12 @@ and a few retro touches from old consoles and games.
 
 > [!NOTE]
 > **About the images in the screenshots.** The wallpapers, the fastfetch logo, the
-> battery menu picture and the profile picture are my own choices, mostly made by other
-> creators. They are **not included** in arch-melon, which installs its own defaults.
+> battery menu picture and the profile picture are my own choices. They are **not included**
+> in arch-melon, which installs its own defaults.
 > - Halo: Combat Evolved wallpapers by [u/Comfortable_Part1350](https://www.reddit.com/r/halo/comments/1qlq7xp/halo_ce_wallpapers/)
 > - Dark Souls bonfire pixel art (battery menu) by [Alexander McDonald](https://www.artstation.com/artwork/YG2NNb) ([@cannonbreed](https://x.com/cannonbreed))
+> - Nintendo 64 logo (fastfetch): the one shown at Nintendo's Shoshinkai 1995 show, where the console was revealed, still called Ultra 64
+> - Profile picture: my own photo of my LEGO
 
 ## 📸 Screenshots
 
