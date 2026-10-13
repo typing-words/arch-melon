@@ -32,7 +32,7 @@ and a few retro touches from old consoles and games.
 > in arch-melon, which installs its own defaults.
 > - Halo: Combat Evolved wallpapers by [u/Comfortable_Part1350](https://www.reddit.com/r/halo/comments/1qlq7xp/halo_ce_wallpapers/)
 > - Dark Souls bonfire pixel art (battery menu) by [Alexander McDonald](https://www.artstation.com/artwork/YG2NNb) ([@cannonbreed](https://x.com/cannonbreed))
-> - Nintendo 64 logo (fastfetch): the one shown at Nintendo's Shoshinkai 1995 show, where the console was revealed, still called Ultra 64
+> - Nintendo 64 logo (fastfetch): the one shown at Nintendo's Shoshinkai 1995 show, where the console was revealed
 > - Profile picture: my own photo of my LEGO
 
 ## 📸 Screenshots
