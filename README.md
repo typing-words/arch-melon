@@ -18,9 +18,39 @@ and a few retro touches from old consoles and games.
 
 <br>
 
+<img src="assets/screenshots/02-bar.webp" alt="Waybar" width="100%">
+
 <sub><b>Hyprland</b> · Waybar · Rofi · Kitty · Starship · Mako · Hyprlock · Ly</sub>
 
 </div>
+
+---
+
+## 📸 Screenshots
+
+<img src="assets/screenshots/01-desktop.webp" alt="Desktop" width="100%">
+
+<img src="assets/screenshots/10-workspace.webp" alt="kitty with fastfetch and btop" width="100%">
+
+| | |
+|:---:|:---:|
+| <img src="assets/screenshots/03-launcher.webp" alt="App launcher"> | <img src="assets/screenshots/04-keybinds.webp" alt="Keybinds"> |
+| **App launcher** · `Super + Space` | **Keybinds** · `Super + K` |
+| <img src="assets/screenshots/11-windows.webp" alt="Window switcher"> | <img src="assets/screenshots/14-clipboard.webp" alt="Clipboard history"> |
+| **Window switcher** · `Super + Tab` | **Clipboard history** · `Super + Ctrl + V` |
+| <img src="assets/screenshots/06-emoji.webp" alt="Emoji picker"> | <img src="assets/screenshots/07-screenshot-menu.webp" alt="Screenshot menu"> |
+| **Emoji picker** · `Super + Shift + E` | **Screenshot menu** · `Print` |
+| <img src="assets/screenshots/08-battery.webp" alt="Battery menu"> | <img src="assets/screenshots/09-ai-costs.webp" alt="AI usage and costs"> |
+| **Battery** · click the battery pill | **AI usage and costs** · click the AI pill |
+| <img src="assets/screenshots/05-power.webp" alt="Power menu"> | <img src="assets/screenshots/13-polkit.webp" alt="Password window" width="60%"> |
+| **Power menu** · power key or `⏻` | **Password window** · `Super + Ctrl + S` |
+
+<p align="center">
+<img src="assets/screenshots/12-notification.webp" alt="Notification"><br>
+<b>Notifications</b> (mako)
+</p>
+
+<sub>Wallpapers, the fastfetch logo, the battery menu picture and the profile picture in these screenshots are the author's own choices and are not included; arch-melon installs its own defaults.</sub>
 
 ---
 
