@@ -6,3 +6,5 @@ nautilus-open-any-terminal
 google-chrome
 # Usage numbers for the AI pill in Waybar and its cost table
 ccusage
+# Super+M mail (change "mailClient" in hyprland.lua to use another one)
+betterbird-bin

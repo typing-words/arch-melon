@@ -50,12 +50,6 @@ if ! command -v yay >/dev/null; then
 fi
 yay -S --needed $(pkgs core-aur.txt)
 
-info "Extras: $(pkgs extras-repo.txt | tr '\n' ' ')$(pkgs extras-aur.txt | tr '\n' ' ')"
-if ask "Install the extras (Betterbird mail, Docker + lazydocker)?"; then
-    sudo pacman -S --needed $(pkgs extras-repo.txt)
-    yay -S --needed $(pkgs extras-aur.txt)
-fi
-
 # --- 2 + 3. Your files ----------------------------------------------------------------
 say "Files in your home"
 mkdir -p "$BACKUP/home"

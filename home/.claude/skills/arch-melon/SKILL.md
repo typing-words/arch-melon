@@ -42,7 +42,7 @@ repo like `~/.dotfiles`) and follow their workflow; if unsure, ask.
 | Terminal, prompt, shell | `~/.config/kitty/kitty.conf`, `~/.config/starship.toml`, `~/.bashrc`, `~/.inputrc` |
 | Helper scripts | `~/.local/bin/` |
 | Copies of system files (paths mirror `/`) | `~/.config/arch-melon/system/etc/...`, `usr/...` |
-| Package lists | `packages/core-*.txt`, `extras-*.txt` in the repo |
+| Package lists | `packages/core-repo.txt`, `core-aur.txt` in the repo |
 
 Helper scripts (each prints usage in its header comment):
 | Script | Does | Needs |

@@ -1,5 +1,0 @@
-# Apps some binds open (Super+Ctrl+O lazydocker). install.sh asks before installing.
-docker
-docker-compose
-docker-buildx
-lazydocker

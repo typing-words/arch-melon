@@ -270,7 +270,7 @@ cd arch-melon
 
 It asks before each big step:
 
-1. Installs the packages in `packages/` (and `yay` for the AUR ones, if missing). Extras (Betterbird for mail, Docker + lazydocker) are optional.
+1. Installs the packages in `packages/` (and `yay` for the AUR ones, if missing).
 2. Copies `home/` into your home. **Every file it replaces is backed up first** to `~/.config/arch-melon/backup-<date>/`.
 3. Lists the system files in `system/`, installs them if you say yes (old ones backed up too). What each does: [`docs/system-files.md`](docs/system-files.md).
 4. Enables the services, then log out and pick Hyprland.
@@ -301,7 +301,7 @@ already met. Claude loads it whenever a task touches this setup.
 
 ```
 install.sh        Installer
-packages/         Package lists: core (always) and extras (asked)
+packages/         Package lists (official repos and AUR)
 home/             Copied into $HOME: .config/{hypr,waybar,rofi,kitty,mako,...}, .local/bin scripts, fonts
 system/           Files for /etc and /usr (logind, Ly, iwd, polkit, faillock, nopasswd)
 docs/             SYSTEM-CONFIG.txt (every setting) and system-files.md

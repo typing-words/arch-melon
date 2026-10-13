@@ -541,7 +541,7 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
 -------------------------------------------------------------------------------
  APPS & TOOLS  (package lists: packages/ in the repo)
 -------------------------------------------------------------------------------
-  Core (installed always)
+  Installed
     Files ............... Nautilus (+ nautilus-open-any-terminal: right click >
                           Open in kitty), sushi (Space = quick preview),
                           file-roller (archives).
@@ -558,11 +558,10 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
     ccusage ............. Token counts for the AI pill and its cost table
                           (with a Claude Code login; without one the pill is
                           a plain "󰚩 AI", ready for another agent).
-  Extras (the installer asks)
     betterbird-bin ...... Super+M.
-    Docker .............. docker, docker-compose, docker-buildx, lazydocker
-                          (Super+Ctrl+O).
-  Not installed (pick for your hardware)
+  Not installed
+    Docker .............. Super+Ctrl+O opens lazydocker: install docker,
+                          docker-compose and lazydocker if you use it.
     VA-API driver ....... For screenrec: intel-media-driver (Intel) or
                           libva-mesa-driver (AMD). Check with vainfo.
 

@@ -1,3 +1,0 @@
-# Optional apps; install.sh asks before installing.
-# Super+M mail (change "mailClient" in hyprland.lua to use another one)
-betterbird-bin
