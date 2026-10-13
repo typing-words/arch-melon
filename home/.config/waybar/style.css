@@ -1,0 +1,188 @@
+/* Pills: transparent bar, every module floats in its own rounded capsule.
+   Colors match kitty/starship (Tokyo Night, orange accent). */
+@define-color pill   #1f2335;
+@define-color fg     #c0caf5;
+@define-color dim    #565f89;
+@define-color accent #ff9e64;
+@define-color blue   #7aa2f7;
+@define-color green  #9ece6a;
+@define-color yellow #e0af68;
+@define-color red    #f7768e;
+@define-color darkred #db4b4b;
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+    min-height: 0;
+    border: none;
+}
+
+window#waybar {
+    background: transparent;
+    color: @fg;
+}
+
+tooltip {
+    background: #1a1b26;
+    border: 1px solid @dim;
+    border-radius: 10px;
+}
+
+tooltip label {
+    color: @fg;
+}
+
+/* Every module is a pill */
+#workspaces,
+#window,
+#clock,
+#privacy,
+#custom-updates,
+#custom-dnd,
+#custom-keepawake,
+#custom-sudo,
+#custom-recording,
+#tray,
+#bluetooth,
+#custom-claude,
+#backlight,
+#pulseaudio,
+#network,
+#battery,
+#user,
+#custom-power {
+    background: @pill;
+    border-radius: 999px;
+    padding: 0 12px;
+}
+
+/* No pill on an empty workspace with no window */
+window#waybar.empty #window {
+    background: transparent;
+}
+
+#workspaces {
+    padding: 0 4px;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    margin: 4px 1px;
+    color: @dim;
+    background: transparent;
+    border-radius: 999px;
+}
+
+#workspaces button:hover {
+    color: @fg;
+    background: rgba(122, 162, 247, 0.15);
+    box-shadow: none;
+}
+
+#workspaces button.active {
+    color: @pill;
+    background: @accent;
+}
+
+/* Shown on another monitor that is not focused */
+#workspaces button.visible:not(.active) {
+    color: @accent;
+}
+
+#workspaces button.urgent {
+    color: @pill;
+    background: @red;
+}
+
+#window {
+    color: @dim;
+}
+
+#clock {
+    color: @accent;
+    font-weight: bold;
+}
+
+#privacy {
+    color: @red;
+}
+
+#custom-updates {
+    color: @yellow;
+}
+
+/* Bell green while notifications show, red and sleeping (zZ) in do-not-disturb */
+#custom-dnd {
+    color: @green;
+}
+
+#custom-dnd.on {
+    color: @red;
+}
+
+/* Cup red while idle is allowed, green while keeping awake */
+#custom-keepawake {
+    color: @red;
+}
+
+#custom-keepawake.on {
+    color: @green;
+}
+
+#custom-sudo,
+#custom-recording {
+    color: @red;
+}
+
+#bluetooth {
+    color: @blue;
+}
+
+#bluetooth.off,
+#bluetooth.disabled,
+#pulseaudio.muted,
+#network.disconnected {
+    color: @dim;
+}
+
+#backlight {
+    color: @yellow;
+}
+
+#custom-claude {
+    color: @accent;
+}
+
+#custom-claude.idle {
+    color: @dim;
+}
+
+#custom-claude.warning {
+    color: @yellow;
+}
+
+#custom-claude.critical {
+    color: @red;
+}
+
+#network {
+    color: @green;
+}
+
+#user {
+    color: @blue;
+}
+
+#custom-power {
+    color: @red;
+    padding: 0 14px 0 12px;
+}
+
+#custom-power:hover {
+    background: @red;
+    color: @pill;
+}
+
+#user image {
+    margin-right: 6px;
+}

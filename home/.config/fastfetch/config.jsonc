@@ -1,0 +1,40 @@
+// fastfetch: system info shown when a terminal opens
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        // Distro logo; for a picture use "type": "kitty-direct" and "source": "<file.png>"
+        "padding": { "top": 1, "left": 2, "right": 16 }
+    },
+    "display": {
+        // Long lines are cut at the window edge instead of wrapping and breaking the logo
+        "disableLinewrap": true,
+        "separator": "  ",
+        "color": { "keys": "blue" },
+        "key": { "width": 4 }
+    },
+    "modules": [
+        { "type": "title", "format": "{user-name-colored}@{host-name-colored}" },
+        "break",
+        { "type": "os",       "key": "", "keyColor": "blue" },
+        { "type": "host",     "key": "󰌢", "keyColor": "blue" },
+        { "type": "kernel",   "key": "", "keyColor": "blue" },
+        { "type": "packages", "key": "󰏖", "keyColor": "blue" },
+        { "type": "uptime",   "key": "", "keyColor": "blue" },
+        { "type": "bootmgr",  "key": "󱓞", "keyColor": "blue" },
+        "break",
+        { "type": "wm",       "key": "", "keyColor": "magenta" },
+        { "type": "terminal", "key": "", "keyColor": "magenta" },
+        { "type": "shell",    "key": "", "keyColor": "magenta" },
+        { "type": "terminalfont", "key": "", "keyColor": "magenta" },
+        { "type": "lm",       "key": "󰍂", "keyColor": "magenta" },
+        { "type": "locale",   "key": "󰗊", "keyColor": "magenta" },
+        "break",
+        { "type": "cpu",      "key": "", "keyColor": "yellow", "format": "{name}" },
+        { "type": "memory",   "key": "󰍛", "keyColor": "yellow", "format": "{used} / {total} RAM ({percentage})" },
+        { "type": "swap",     "key": "󰓡", "keyColor": "yellow", "format": "{used} / {total} swap ({percentage})" },
+        { "type": "disk",     "key": "󰋊", "keyColor": "yellow", "folders": "/home", "format": "{size-used} / {size-total} ({size-percentage})" },
+        { "type": "battery",  "key": "󰁹", "keyColor": "yellow" },
+        "break",
+        { "type": "colors", "symbol": "circle" }
+    ]
+}

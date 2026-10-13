@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# Claude Code usage summary (ccusage, local data, offline). Costs are what the
+# tokens would cost at API prices, not what the subscription charges.
+# This week day by day (aligned with the weekly limit reset), last week, this month
+# and the plan price.
+# Plain text; the rofi applet (~/.config/rofi/scripts/claude.sh) shows it.
+
+# Weeks follow the plan's weekly limit: they start on the day it resets. The reset
+# time comes from the usage cache written by waybar-ccusage; Wednesday if missing.
+reset=$(jq -r '.seven_day.resets_at // empty' "${XDG_RUNTIME_DIR:-/tmp}/claude-usage.json" 2>/dev/null)
+if [[ -n $reset ]]; then
+    start=$(date -d "$(date -d "$reset" +%Y-%m-%d) -7 days" +%Y-%m-%d)
+else
+    start=$(date -d "$(( ($(date +%u) - 3 + 7) % 7 )) days ago" +%Y-%m-%d)
+fi
+last_start=$(date -d "$start -7 days" +%Y-%m-%d)
+month_start=$(date +%Y-%m-01)
+since=$( [[ $last_start < $month_start ]] && echo "$last_start" || echo "$month_start" )
+week=$(for i in 0 1 2 3 4 5 6; do date -d "$start +$i days" +%Y-%m-%d; done | jq -R . | jq -sc .)
+
+# Monthly price of the plan Claude Code is logged in with
+plan=$(jq -r '.claudeAiOauth | "\(.subscriptionType) \(.rateLimitTier)"' ~/.claude/.credentials.json 2>/dev/null)
+case $plan in
+    pro*)          plan_name="Pro";     plan_price=20 ;;
+    max*20x*)      plan_name="Max 20x"; plan_price=200 ;;
+    max*)          plan_name="Max 5x";  plan_price=100 ;;
+    *)             plan_name="";        plan_price=0 ;;
+esac
+
+ccusage daily --json --offline --since "${since//-/}" 2>/dev/null | jq -r \
+    --argjson week "$week" --arg start "$start" --arg last "$last_start" \
+    --arg month "$month_start" --arg today "$(date +%Y-%m-%d)" \
+    --arg plan "$plan_name" --argjson price "$plan_price" '
+    def money: . * 100 | round / 100 | tostring
+        | if test("\\.") then . else . + ".0" end
+        | if test("\\.[0-9]$") then . + "0" else . end | "$" + .;
+    def tokens: if . >= 1000000 then (. / 100000 | round / 10 | tostring | if test("\\.") then . else . + ".0" end) + "M"
+                elif . >= 1000 then (. / 1000 | round | tostring) + "k" else tostring end;
+    def pad($n): tostring | . + (" " * ([$n - length, 0] | max));
+    def lpad($n): tostring | (" " * ([$n - length, 0] | max)) + .;
+    # Columns: label, input, output, cache write, cache read, cost
+    def row($l; $i; $o; $cw; $cr; $c):
+        "\($l | pad(12))\($i | lpad(7))\($o | lpad(8))\($cw | lpad(9))\($cr | lpad(9))\($c | lpad(10))";
+    def trow($l): row($l; .inputTokens | tokens; .outputTokens | tokens;
+        .cacheCreationTokens | tokens; .cacheReadTokens | tokens; .totalCost | money);
+    def sum($from; $to): [.[] | select(.period >= $from and .period < $to)] as $r
+        | reduce ("inputTokens", "outputTokens", "cacheCreationTokens", "cacheReadTokens", "totalCost") as $k
+            ({}; .[$k] = ([$r[][$k]] | add // 0));
+    def line: "─" * 55;
+    def center: (" " * ([(55 - length) / 2 | floor, 0] | max)) + .;
+    (.daily // []) as $days
+    | ($days | sum($start; "9999")) as $w
+    | ($days | sum($last; $start)) as $lw
+    | ($days | sum($month; "9999")) as $m
+    | row("Day"; "Input"; "Output"; "Cache W"; "Cache R"; "Cost"),
+      line,
+      ($week[] as $date
+        | ($date | strptime("%Y-%m-%d") | strftime("%a %d %b")) as $label
+        | if $date > $today then row($label; "·"; "·"; "·"; "·"; "·")
+          else ($days | map(select(.period == $date)) | first
+                // {inputTokens: 0, outputTokens: 0, cacheCreationTokens: 0, cacheReadTokens: 0, totalCost: 0})
+               | trow($label) end),
+      line,
+      ($w | trow("This week")),
+      ($lw | trow("Last week")),
+      ($m | trow("This month")),
+      (if $price > 0 then
+        line,
+        "\($plan) $\($price)/mo vs \($m.totalCost | money) (\($m.totalCost / $price * 10 | round / 10)×)" | center
+       else empty end)
+'

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Copy the text inside a screen area (OCR with tesseract, English + Spanish).
+
+geometry=$(slurp) || exit 0    # Esc cancels
+text=$(grim -g "$geometry" - | tesseract -l eng+spa - - 2>/dev/null)
+
+if [ -n "${text//[[:space:]]/}" ]; then
+    printf '%s' "$text" | wl-copy
+    notify-send -a ocr "Text copied" "$(printf '%s' "$text" | head -c 120)"
+else
+    notify-send -a ocr "No text found"
+fi

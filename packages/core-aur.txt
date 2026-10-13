@@ -1,0 +1,4 @@
+# AUR part of the desktop (installed with yay; install.sh installs yay first if missing)
+bibata-cursor-theme-bin
+papirus-folders
+nautilus-open-any-terminal

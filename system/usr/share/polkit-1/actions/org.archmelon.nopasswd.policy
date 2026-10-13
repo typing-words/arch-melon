@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<!-- Password window text for ~/.local/bin/nopasswd. hyprpolkitagent renders <message> as
+     Pango markup, max 120 bytes counting the markup, ONE line only (a second line is
+     dropped), cut with "..." past ~340 px (password_field_width; the window ignored a wider
+     window_width and the password box vanished, so it stays default).
+     Keep each message ONE CDATA section with no entities and no newline: polkit keeps only
+     the last piece of text the XML parser hands it, and the parser splits at both.
+     size='15pt' = hyprtoolkit's h2_size (the title); the agent draws messages at h3 (13).
+     How to turn the no-limit mode off is in nopasswd's mako notification instead. -->
+<policyconfig>
+  <action id="org.archmelon.nopasswd.15min">
+    <description>Passwordless sudo for 15 minutes</description>
+    <message><![CDATA[<span color='#ff9e64' weight='bold' size='15pt'>Passwordless sudo for 15 min</span>]]></message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/local/bin/nopasswd-15min</annotate>
+  </action>
+  <action id="org.archmelon.nopasswd.nolimit">
+    <description>Passwordless sudo with no time limit</description>
+    <message><![CDATA[<span color='#ff9e64' weight='bold' size='15pt'>Passwordless sudo, no limit</span>]]></message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/local/bin/nopasswd-nolimit</annotate>
+  </action>
+</policyconfig>

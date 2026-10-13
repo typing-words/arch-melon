@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Volume and brightness keys: applies the change; for volume and mic also shows a
+# mako notification with a progress bar that replaces the previous one.
+# Usage: osd volume up|down|mute | osd mic mute | osd brightness up|down
+
+id_file="${XDG_RUNTIME_DIR:-/tmp}/osd-id"
+id=$(cat "$id_file" 2>/dev/null)
+[[ $id =~ ^[0-9]+$ ]] || id=0   # empty or stale file, e.g. after mako restarts
+
+show() {  # icon, text, value
+    local new
+    new=$(notify-send -a osd -t 1500 -h "int:value:$3" -r "$id" -p "$1  $2") && echo "$new" > "$id_file"
+}
+
+case "$1 $2" in
+    "volume up")   wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ ;;
+    "volume down") wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- ;;
+    "volume mute") wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ;;
+    "mic mute")    wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle ;;
+    # Every backlight moves together (laptops with two screens have two)
+    "brightness up")   for d in /sys/class/backlight/*; do brightnessctl -q -d "${d##*/}" -n2 set 5%+; done ;;
+    "brightness down") for d in /sys/class/backlight/*; do brightnessctl -q -d "${d##*/}" -n2 set 5%-; done ;;
+    *) echo "usage: osd volume up|down|mute | osd mic mute | osd brightness up|down" >&2; exit 1 ;;
+esac
+
+case "$1" in
+    volume)
+        read -r _ vol muted < <(wpctl get-volume @DEFAULT_AUDIO_SINK@)
+        pct=$(awk -v v="$vol" 'BEGIN { printf "%d", v * 100 + 0.5 }')
+        if [[ -n $muted ]]; then show "󰝟" "Muted" 0; else show "󰕾" "Volume $pct%" "$pct"; fi ;;
+    mic)
+        read -r _ _ muted < <(wpctl get-volume @DEFAULT_AUDIO_SOURCE@)
+        if [[ -n $muted ]]; then show "󰍭" "Microphone muted" 0; else show "󰍬" "Microphone on" 100; fi ;;
+    # Brightness has no popup: the Waybar pill already shows the level
+esac

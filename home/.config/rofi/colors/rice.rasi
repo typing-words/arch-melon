@@ -1,0 +1,13 @@
+/**
+ * Rice colors: Tokyo Night background with the orange accent used in
+ * kitty, starship, Waybar, mako and the Hyprland borders.
+ **/
+
+* {
+    background:     #1A1B26FF;
+    background-alt: #1F2335FF;
+    foreground:     #C0CAF5FF;
+    selected:       #FF9E64FF;
+    active:         #9ECE6AFF;
+    urgent:         #F7768EFF;
+}

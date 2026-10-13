@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Keep Awake toggle: holds a systemd "idle" inhibitor that hypridle respects, so the
+# screen doesn't lock and the laptop doesn't suspend while it is on.
+#   keepawake          -> toggle it on/off and refresh the Waybar pill (signal 10)
+#   keepawake status   -> JSON for the Waybar pill
+
+running() { pgrep -f '^systemd-inhibit --what=idle --who=keepawake' >/dev/null; }
+
+if [ "$1" = status ]; then
+    if running; then
+        echo '{"text":"󰅶","class":"on","tooltip":"Keep Awake: on (no screen lock or suspend)"}'
+    else
+        echo '{"text":"󰾪","tooltip":"Keep Awake: off"}'
+    fi
+    exit 0
+fi
+
+if running; then
+    pkill -f '^systemd-inhibit --what=idle --who=keepawake'
+else
+    setsid systemd-inhibit --what=idle --who=keepawake --why="Keep Awake" sleep infinity >/dev/null 2>&1 &
+fi
+sleep 0.2
+pkill -RTMIN+10 -x waybar

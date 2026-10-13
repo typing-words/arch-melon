@@ -1,0 +1,43 @@
+# Mako: notifications styled like the rest of the rice (Tokyo Night, orange accent)
+font=JetBrainsMono Nerd Font 11
+background-color=#1a1b26f2
+text-color=#c0caf5
+border-color=#ff9e64
+border-size=2
+border-radius=14
+padding=14,16
+margin=10
+width=360
+height=160
+icons=1
+max-icon-size=48
+icon-location=left
+anchor=top-right
+layer=overlay
+max-visible=4
+format=<b>%s</b>\n<span color="#a9b1d6">%b</span>
+progress-color=over #ff9e6466
+
+# Close notifications after 30 seconds (in ms) when the app doesn't set its own timeout
+default-timeout=30000
+
+[urgency=low]
+border-color=#565f89
+
+[urgency=critical]
+border-color=#f7768e
+default-timeout=0
+
+# Do not disturb: toggled from the Waybar bell (makoctl mode -t do-not-disturb)
+[mode=do-not-disturb]
+invisible=1
+
+# OSD from ~/.local/bin/osd (volume/brightness keys); stays visible in do-not-disturb
+[app-name=osd]
+# Not kept in history (makoctl restore/history), only shown
+history=0
+anchor=top-center
+invisible=0
+width=280
+border-color=#7aa2f7
+format=<b>%s</b>

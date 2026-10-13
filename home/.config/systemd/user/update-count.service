@@ -1,0 +1,8 @@
+[Unit]
+Description=Count pending package updates for the prompt
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/update-count

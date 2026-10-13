@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Counts pending updates (official repos + AUR) and saves the number for the
+# starship prompt. Run by the update-count.timer user unit, not by the prompt,
+# because checking needs the network and would make the prompt slow.
+
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/update-count"
+repo=$(checkupdates 2>/dev/null | wc -l)   # safe: uses a temp copy of the package database
+aur=$(yay -Qua 2>/dev/null | wc -l)
+echo $((repo + aur)) > "$cache.tmp" && mv "$cache.tmp" "$cache"

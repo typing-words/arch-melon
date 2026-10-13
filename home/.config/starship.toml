@@ -1,0 +1,155 @@
+# Starship prompt: rounded "pills" with a soft background, time after the other pills,
+# a line joining both rows, and an orange arrow on the next line (red when the last command failed).
+"$schema" = 'https://starship.rs/config-schema.json'
+add_newline = true
+
+format = """[╭─](#545c7e)$os$username$directory$git_branch$git_commit$git_status$python$nodejs$php$docker_context$bun$java$kotlin$scala$golang$rust$c$cpp$dotnet$ruby$perl$lua$erlang$container$sudo${custom.updates}$time$fill$cmd_duration
+[╰─](#545c7e)$character"""
+
+[os]
+disabled = false
+format = '[](fg:#1f2335)[$symbol](fg:#ff9e64 bg:#1f2335)[](fg:#1f2335) '
+
+[os.symbols]
+Arch = "󰣇"
+
+# Only shown when you are root (sudo su) or connected over SSH
+[username]
+style_root = "fg:#f7768e bg:#1f2335 bold"
+style_user = "fg:#a9b1d6 bg:#1f2335"
+format = '[](fg:#1f2335)[ $user]($style)[](fg:#1f2335) '
+
+[directory]
+truncation_length = 0  # show the full path (home shown as ~)
+truncate_to_repo = false
+format = '[](fg:#1f2335)[$path](fg:#f8d775 bg:#1f2335)[](fg:#1f2335) '
+read_only = " 󰌾"
+home_symbol = "󰋜 ~"
+
+# Icons for common folders (shown before the folder name)
+[directory.substitutions]
+"Documents" = "󰈙 Documents"
+"Downloads" = "󰇚 Downloads"
+"Pictures" = "󰋩 Pictures"
+"Music" = "󰝚 Music"
+"Videos" = "󰕧 Videos"
+"Desktop" = "󰍹 Desktop"
+".config" = "󰒓 .config"
+
+[git_branch]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $branch](fg:#bb9af7 bg:#1f2335)[](fg:#1f2335) '
+
+[git_status]
+format = '([](fg:#1f2335)[$all_status$ahead_behind](fg:#f7768e bg:#1f2335)[](fg:#1f2335) )'
+
+[python]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version( \\($virtualenv\\))](fg:#e0af68 bg:#1f2335)[](fg:#1f2335) '
+
+[nodejs]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#9ece6a bg:#1f2335)[](fg:#1f2335) '
+
+[php]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#bb9af7 bg:#1f2335)[](fg:#1f2335) '
+
+[docker_context]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $context](fg:#7dcfff bg:#1f2335)[](fg:#1f2335) '
+
+[git_commit]
+only_detached = false  # always show the short commit hash
+tag_disabled = false   # and the tag, when there is one
+tag_symbol = "  "
+format = '[](fg:#1f2335)[ $hash$tag](fg:#bb9af7 bg:#1f2335)[](fg:#1f2335) '
+
+[bun]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#fbf0df bg:#1f2335)[](fg:#1f2335) '
+
+[java]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#f7768e bg:#1f2335)[](fg:#1f2335) '
+
+[kotlin]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#bb9af7 bg:#1f2335)[](fg:#1f2335) '
+
+[scala]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#f7768e bg:#1f2335)[](fg:#1f2335) '
+
+[golang]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#7dcfff bg:#1f2335)[](fg:#1f2335) '
+
+[rust]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#ff9e64 bg:#1f2335)[](fg:#1f2335) '
+
+[c]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#7aa2f7 bg:#1f2335)[](fg:#1f2335) '
+
+[cpp]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#7aa2f7 bg:#1f2335)[](fg:#1f2335) '
+
+[dotnet]
+symbol = "󰪮"
+format = '[](fg:#1f2335)[$symbol $version](fg:#bb9af7 bg:#1f2335)[](fg:#1f2335) '
+
+[ruby]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#f7768e bg:#1f2335)[](fg:#1f2335) '
+
+[perl]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#7dcfff bg:#1f2335)[](fg:#1f2335) '
+
+[lua]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#7aa2f7 bg:#1f2335)[](fg:#1f2335) '
+
+[erlang]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $version](fg:#f7768e bg:#1f2335)[](fg:#1f2335) '
+
+[container]
+symbol = ""
+format = '[](fg:#1f2335)[$symbol $name](fg:#7dcfff bg:#1f2335)[](fg:#1f2335) '
+
+[sudo]
+disabled = false  # shown while sudo is still unlocked (no password needed)
+symbol = "󰒃"
+format = '[](fg:#1f2335)[$symbol sudo](fg:#f7768e bg:#1f2335)[](fg:#1f2335) '
+
+# Pending updates (repos + AUR). The number comes from ~/.cache/update-count,
+# refreshed hourly by update-count.timer; hidden when there are none.
+[custom.updates]
+command = "cat ~/.cache/update-count"
+when = "[ \"$(cat ~/.cache/update-count 2>/dev/null)\" -gt 0 ] 2>/dev/null"
+shell = ["bash", "--noprofile", "--norc"]
+symbol = "󰚰"
+format = '[](fg:#1f2335)[$symbol $output](fg:#e0af68 bg:#1f2335)[](fg:#1f2335) '
+
+
+# Pushes the command duration to the far right of the line
+[fill]
+symbol = " "
+
+[cmd_duration]
+min_time = 0             # show it after every command
+show_milliseconds = true # e.g. "1s 234ms"
+format = '[](fg:#1f2335)[took $duration](fg:#545c7e bg:#1f2335)[](fg:#1f2335)'
+
+[time]
+disabled = false
+time_format = "%R"
+format = '[](fg:#1f2335)[ $time](fg:#a9b1d6 bg:#1f2335)[](fg:#1f2335) '
+
+[character]
+success_symbol = "[❯](bold #ff9e64)"
+error_symbol = "[❯](bold #f7768e)"

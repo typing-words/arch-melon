@@ -1,0 +1,215 @@
+// Waybar: one bar per monitor, every module in its own pill (see style.css)
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 6,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
+
+    "modules-left": ["hyprland/workspaces", "backlight", "pulseaudio", "bluetooth", "hyprland/window", "custom/sudo", "custom/recording"],
+    "modules-center": ["custom/dnd", "clock", "custom/keepawake"],
+    "modules-right": [
+        "privacy", "custom/updates",
+        "custom/claude", "network", "battery", "user", "custom/power"
+    ],
+
+    // Click needs a Waybar build that speaks the Lua dispatch syntax (waybar-git until the next release)
+    "hyprland/workspaces": {
+        "format": "{id}",
+        "on-click": "activate"
+    },
+
+    // Title of the focused window; hidden on an empty workspace
+    // Click the title: screenshot menu
+    "hyprland/window": {
+        "format": "{title}",
+        "max-length": 50,
+        "separate-outputs": true,
+        "tooltip-format": "Click: screenshot menu",
+        "on-click": "~/.config/rofi/scripts/screenshot.sh"
+    },
+
+    // Red shield only while sudo needs no password (Super+Ctrl+S / Super+Ctrl+Alt+S); click turns it off (signal 12)
+    "custom/sudo": {
+        "exec": "~/.local/bin/nopasswd status",
+        "return-type": "json",
+        "interval": "once",
+        "signal": 12,
+        "on-click": "~/.local/bin/nopasswd off"
+    },
+
+    // Red dot only while screenrec is recording; click stops and saves (signal 11 refreshes it)
+    "custom/recording": {
+        "exec": "~/.local/bin/screenrec status",
+        "return-type": "json",
+        "interval": "once",
+        "signal": 11,
+        "on-click": "~/.local/bin/screenrec"
+    },
+
+    // Hover shows the calendar: scroll changes month, right click switches month/year view, middle click goes back to today
+    "clock": {
+        "format": "{:%a %d %b  %H:%M}",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "on-scroll": 1,
+            "weeks-pos": "right",
+            "format": {
+                "months": "<span color='#ff9e64'><b>{}</b></span>",
+                "weekdays": "<span color='#7aa2f7'><b>{}</b></span>",
+                // ISO week number
+                "weeks": " <span color='#565f89' size='small'>{:%V}</span>",
+                "today": "<span color='#1a1b26' background='#ff9e64'><b>{}</b></span>"
+            }
+        },
+        "actions": {
+            "on-click-right": "mode",
+            "on-click-middle": "shift_reset",
+            "on-scroll-up": "shift_down",
+            "on-scroll-down": "shift_up"
+        }
+    },
+
+    // Shows only while something uses the screen or the microphone
+    "privacy": {
+        "icon-size": 14,
+        "modules": [
+            { "type": "screenshare", "tooltip": true },
+            { "type": "audio-in", "tooltip": true }
+        ]
+    },
+
+    // Count written hourly by update-count.timer; hidden when there is nothing to update
+    "custom/updates": {
+        "exec": "cat ~/.cache/update-count",
+        "interval": 300,
+        "format": "󰏗 {}",
+        "exec-if": "test \"$(cat ~/.cache/update-count 2>/dev/null)\" -gt 0",
+        "tooltip-format": "{} pending updates (click to update)",
+        // After yay finishes, recount and refresh this pill right away (signal 9)
+        "on-click": "kitty --class popup -e sh -c 'yay; ~/.local/bin/update-count; pkill -RTMIN+9 -x waybar'",
+        "signal": 9
+    },
+
+    // Mako do-not-disturb: notifications are kept but not shown; click toggles
+    "custom/dnd": {
+        "exec": "makoctl mode | grep -q do-not-disturb && echo '{\"text\":\"󰂠\",\"class\":\"on\",\"tooltip\":\"Do not disturb\"}' || echo '{\"text\":\"󰂚\",\"tooltip\":\"Notifications on\"}'",
+        "return-type": "json",
+        "interval": "once",
+        "signal": 8,
+        "on-click": "makoctl mode -t do-not-disturb && pkill -RTMIN+8 -x waybar",
+        "on-click-right": "makoctl restore"
+    },
+
+    // Keep Awake (systemd idle inhibitor, also Super+Ctrl+I); signal 10 refreshes it
+    "custom/keepawake": {
+        "exec": "~/.local/bin/keepawake status",
+        "return-type": "json",
+        "interval": "once",
+        "signal": 10,
+        "on-click": "~/.local/bin/keepawake"
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-disabled": "󰂲",
+        "format-off": "󰂲",
+        "format-connected": "󰂱 {num_connections}",
+        "tooltip-format": "{controller_alias}: {status}",
+        "tooltip-format-connected": "{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}",
+        "tooltip-format-enumerate-connected-battery": "{device_alias} {device_battery_percentage}%",
+        "on-click": "kitty --class popup -e bluetui"
+    },
+
+    // Top screen's level; scroll changes both screens and shows the OSD
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
+        "tooltip": false,
+        "on-scroll-up": "~/.local/bin/osd brightness up",
+        "on-scroll-down": "~/.local/bin/osd brightness down"
+    },
+
+    // Output and mic in one pill; click opens pavucontrol to pick input/output devices
+    "pulseaudio": {
+        "format": "{icon} {volume}%  {format_source}",
+        "format-muted": "󰝟  {format_source}",
+        "format-source": "󰍬",
+        "format-source-muted": "󰍭",
+        "format-icons": { "headphone": "󰋋", "default": ["󰕿", "󰖀", "󰕾"] },
+        "on-click": "pavucontrol",
+        "on-click-right": "~/.local/bin/osd volume mute",
+        "on-click-middle": "~/.local/bin/osd mic mute",
+        "on-scroll-up": "~/.local/bin/osd volume up",
+        "on-scroll-down": "~/.local/bin/osd volume down"
+    },
+
+    // Claude plan limits as % remaining: session (5h) · weekly; tooltip has reset times and today's tokens
+    "custom/claude": {
+        "exec": "~/.local/bin/waybar-ccusage",
+        "return-type": "json",
+        "interval": 120,
+        // Last 7 days, this week (Monday to Sunday) and this month; costs are API-price estimates
+        "on-click": "~/.config/rofi/scripts/claude.sh"
+    },
+
+    // Icon tells wifi from cable, then network name and download speed
+    "network": {
+        "interval": 2,
+        "format-wifi": "󰤨 {essid} | {bandwidthDownBytes}",
+        "format-ethernet": "󰈀 {bandwidthDownBytes}",
+        "format-disconnected": "󰤭",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}\n {bandwidthDownBytes}   {bandwidthUpBytes}",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}\n {bandwidthDownBytes}   {bandwidthUpBytes}",
+        "tooltip-format-disconnected": "Offline",
+        "on-click": "kitty --class popup -e impala"
+    },
+
+    "battery": {
+        // Battery and adapter are found automatically; to pin one add "bat": "BAT0", "adapter": "AC"
+        "interval": 10,
+        // Each state colors only the icon: green -> lime -> yellow -> orange -> red -> dark red
+        "states": { "high": 100, "good": 70, "half": 50, "warning": 30, "critical": 15, "dying": 5 },
+        "format": "{icon} <b>{capacity}%</b>",
+        "format-high": "<span color='#9ece6a'>{icon}</span> <b>{capacity}%</b>",
+        "format-good": "<span color='#b9c96a'>{icon}</span> <b>{capacity}%</b>",
+        "format-half": "<span color='#e0af68'>{icon}</span> <b>{capacity}%</b>",
+        "format-warning": "<span color='#ff9e64'>{icon}</span> <b>{capacity}%</b>",
+        "format-critical": "<span color='#f7768e'>{icon}</span> <b>{capacity}%</b>",
+        "format-dying": "<span color='#db4b4b'>{icon}</span> <b>{capacity}%</b>",
+        "format-charging": "<span color='#9ece6a'>󰂄</span> <b>{capacity}%</b>  {power:.0f}W",
+        "format-plugged": "<span color='#9ece6a'>󰚥</span> <b>{capacity}%</b>",
+        "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"],
+        "tooltip-format": "{timeTo}\n{power:.1f} W",
+        "on-click": "~/.config/rofi/scripts/battery.sh"
+    },
+
+    // Logged-in user and system uptime
+    "user": {
+        "format": "{user}  󰔟 <b>{work_d}d {work_H}h {work_M}m</b>",
+        "interval": 60,
+        // Round copy of ~/.face (GTK3 cannot round images with CSS)
+        "icon": true,
+        "avatar": "/home/USER/.config/waybar/avatar.png",
+        "height": 20,
+        "width": 20,
+        // By default a click opens the home folder
+        "open-on-click": false
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "tooltip-format": "Power menu",
+        "on-click": "~/.config/rofi/scripts/powermenu.sh"
+    }
+}

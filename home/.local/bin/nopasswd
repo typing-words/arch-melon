@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Passwordless sudo on demand: a sudoers drop-in (NOPASSWD: ALL) that comes and goes.
+#   nopasswd         -> on for 15 minutes; a user timer turns it off again
+#   nopasswd toggle  -> on with no time limit, or off if it is on
+#   nopasswd off     -> off now
+#   nopasswd status  -> JSON for the Waybar pill (empty, so hidden, when off)
+#   nopasswd setup   -> (re)install the system half from ~/.config/arch-melon/system (done on first use)
+# Turning it on asks for the password once: pkexec runs /usr/local/bin/nopasswd-15min or
+# nopasswd-nolimit, and their polkit actions put what is being allowed in the window.
+# Turning it on notifies through mako; every change refreshes the Waybar pill (signal 12).
+# /etc/tmpfiles.d/nopasswd.conf deletes the drop-in at boot, so it never outlives a reboot.
+
+rule=/etc/sudoers.d/zz-nopasswd
+timer=nopasswd-off
+
+active() { sudo -n true 2>/dev/null; }    # NOPASSWD answers without a password
+refresh() { pkill -RTMIN+12 -x waybar; }
+
+if [ "$1" = status ]; then
+    if active; then
+        left=$(systemctl --user show "$timer.timer" -p NextElapseUSecRealtime --value 2>/dev/null)
+        if [ -n "$left" ]; then
+            tip="Passwordless sudo until $(date -d "$left" +%H:%M) (click to turn off)"
+        else
+            tip="Passwordless sudo, no time limit (click to turn off)"
+        fi
+        echo "{\"text\":\"󰒃\",\"tooltip\":\"$tip\"}"
+    else
+        echo '{"text":""}'
+    fi
+    exit 0
+fi
+
+off() {
+    systemctl --user stop "$timer.timer" 2>/dev/null
+    active || { refresh; return; }
+    sudo -n rm -f "$rule"
+    refresh
+}
+
+sys="$HOME/.config/arch-melon/system"
+setup="install -m 0755 $sys/usr/local/bin/nopasswd-root /usr/local/bin/nopasswd-15min
+       install -m 0755 $sys/usr/local/bin/nopasswd-root /usr/local/bin/nopasswd-nolimit
+       install -m 0644 $sys/usr/share/polkit-1/actions/org.archmelon.nopasswd.policy /usr/share/polkit-1/actions/
+       install -m 0644 $sys/etc/tmpfiles.d/nopasswd.conf /etc/tmpfiles.d/"
+
+on() {    # $1 = 15min | nolimit
+    if [ -x /usr/local/bin/nopasswd-nolimit ]; then
+        pkexec "/usr/local/bin/nopasswd-$1" || exit 1
+    else
+        # First use: install the system half and turn it on with one password
+        pkexec sh -c "$setup && /usr/local/bin/nopasswd-$1" || exit 1
+    fi
+    systemctl --user stop "$timer.timer" 2>/dev/null
+    systemctl --user reset-failed "$timer.service" "$timer.timer" 2>/dev/null
+    if [ "$1" = 15min ]; then
+        systemd-run --user --quiet --unit="$timer" --on-active=15m "$HOME/.local/bin/nopasswd" off
+        notify-send -a nopasswd -u critical -t 8000 -i security-high "Passwordless sudo for 15 min" "Until $(date -d "+15 min" +%H:%M)"
+    else
+        notify-send -a nopasswd -u critical -t 8000 -i security-high "Passwordless sudo, no limit" \
+            "<b><span color='#ff9e64'>Super+Ctrl+Alt+S</span></b> turns it off
+or click the 󰒃 sudo icon right of the window title"
+    fi
+    refresh
+}
+
+case "$1" in
+    off)    off ;;
+    toggle) if active; then off; else on nolimit; fi ;;
+    setup)  pkexec sh -c "$setup" ;;
+    *)      on 15min ;;
+esac

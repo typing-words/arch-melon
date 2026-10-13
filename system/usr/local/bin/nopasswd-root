@@ -1,0 +1,10 @@
+#!/bin/sh
+# Root half of ~/.local/bin/nopasswd: writes the passwordless sudo drop-in for the user
+# who ran pkexec. Installed twice, as /usr/local/bin/nopasswd-15min and nopasswd-nolimit,
+# so each polkit action (usr/share/polkit-1/actions/org.archmelon.nopasswd.policy)
+# shows its own message in the password window.
+rule=/etc/sudoers.d/zz-nopasswd
+user=$(id -nu "$PKEXEC_UID") || exit 1
+umask 0337
+echo "$user ALL=(ALL:ALL) NOPASSWD: ALL" > "$rule.tmp"
+visudo -cqf "$rule.tmp" && mv "$rule.tmp" "$rule" || { rm -f "$rule.tmp"; exit 1; }

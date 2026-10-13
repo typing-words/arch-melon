@@ -1,0 +1,22 @@
+#%PAM-1.0
+# Overrides /usr/lib/pam.d/polkit-1 (which just includes system-auth). Same auth
+# lines as /etc/pam.d/system-auth except one control: closing the polkit password
+# window (Cancel / Esc / Super+C) is not counted by pam_faillock.
+#
+# Why: with polkit's socket helper, hyprpolkitagent cancels by closing the socket;
+# the helper's PAM conversation gets no answer, pam_get_authtok returns
+# PAM_AUTHTOK_ERR, and system-auth's "default=bad" then runs "pam_faillock authfail".
+# authtok_err=die ends the stack there instead. A wrong password is PAM_AUTH_ERR,
+# so it still counts toward the lock.
+
+auth       required                    pam_faillock.so      preauth
+-auth      [success=2 default=ignore]  pam_systemd_home.so
+auth       [success=1 authtok_err=die default=bad]  pam_unix.so  try_first_pass nullok
+auth       [default=die]               pam_faillock.so      authfail
+auth       optional                    pam_permit.so
+auth       required                    pam_env.so
+auth       required                    pam_faillock.so      authsucc
+
+account    include                     system-auth
+password   include                     system-auth
+session    include                     system-auth

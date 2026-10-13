@@ -1,0 +1,29 @@
+/* Battery menu (scripts/battery.sh): style-1 with its picture and nothing over it.
+   url() only parses in a theme file, not in -theme-str. */
+@import "style-1.rasi"
+
+imagebox {
+    background-image: url("~/.config/rofi/images/battery.png", height);
+    children: [ "dummy" ];
+}
+
+/* No visible selection: every row looks the same selected or not.
+   Row 0 (remaining) is "urgent" and always orange; row 1 (status) is "active" and
+   always uses status-color, which battery.sh sets (green, red while discharging). */
+element normal.normal, element alternate.normal, element selected.normal {
+    background-color: var(background);
+    text-color:       var(foreground);
+}
+element normal.urgent, element alternate.urgent, element selected.urgent {
+    background-color: var(selected);
+    text-color:       var(background);
+}
+element normal.active, element alternate.active, element selected.active {
+    background-color: var(status-color);
+    text-color:       var(background);
+}
+
+/* Rows do nothing on click, so the cursor stays an arrow over them */
+element, element-text, element-icon {
+    cursor: default;
+}

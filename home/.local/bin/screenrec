@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Screen recording toggle (gpu-screen-recorder, encoded on the GPU through VA-API). First press
+# starts, second press stops and saves.
+#   screenrec region   -> select an area with the mouse
+#   screenrec monitor  -> the monitor under the cursor
+#   screenrec status   -> JSON for the Waybar red dot (empty, so hidden, when not recording)
+# Videos go to ~/Videos/Recordings, 60 fps, no audio.
+
+dir="$HOME/Videos/Recordings"
+mkdir -p "$dir"
+
+if [ "$1" = status ]; then
+    pgrep -x gpu-screen-reco >/dev/null && echo '{"text":"●","tooltip":"Recording (click to stop)"}' || echo '{"text":""}'
+    exit 0
+fi
+
+# Already recording: stop (SIGINT lets gpu-screen-recorder finish the file properly)
+if pgrep -x gpu-screen-reco >/dev/null; then
+    pkill -INT -x gpu-screen-reco
+    notify-send -a screenrec "Recording saved" "$(ls -t "$dir" | head -1)"
+    exit 0
+fi
+
+file="$dir/rec-$(date +%Y%m%d-%H%M%S).mp4"
+case "${1:-region}" in
+    region)
+        region=$(slurp -f '%wx%h+%x+%y') || exit 0    # Esc cancels
+        notify-send -a screenrec "Recording" "Press Super+Shift+R again to stop"
+        args=(-w region -region "$region") ;;
+    monitor)
+        output=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
+        notify-send -a screenrec "Recording $output" "Press Super+Shift+Alt+R again to stop"
+        args=(-w "$output") ;;
+esac
+
+# Record in the background so the Waybar dot (signal 11) can show now and hide when it stops
+gpu-screen-recorder "${args[@]}" -f 60 -c mp4 -o "$file" &
+sleep 0.3
+pkill -RTMIN+11 -x waybar
+wait
+pkill -RTMIN+11 -x waybar

@@ -1,0 +1,7 @@
+# Readline (bash prompt). Keep the system defaults first.
+$include /etc/inputrc
+
+# Ctrl+Backspace: delete the word before the cursor (kitty sends ^H for it)
+"\C-h": backward-kill-word
+# Ctrl+Delete: delete the word after the cursor (kitty sends ESC[3;5~ for it)
+"\e[3;5~": kill-word

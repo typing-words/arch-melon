@@ -1,0 +1,595 @@
+===============================================================================
+ ARCH-MELON · SETTING BY SETTING
+ Arch Linux · Hyprland (Lua config)
+===============================================================================
+
+How to read this file
+  CATEGORY
+    Setting name ........ what it is, how it is configured, where it lives.
+
+Shared look across the whole rice ("the palette")
+  Background  #1a1b26 / pills #1f2335       (Tokyo Night)
+  Text        #c0caf5   dim  #565f89
+  Accent      #ff9e64 (orange)   blue #7aa2f7   green #9ece6a
+  Yellow      #e0af68            red  #f7768e
+  Font        JetBrainsMono Nerd Font (terminal, bar, menus, lock screen)
+
+Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
+
+
+-------------------------------------------------------------------------------
+ SYSTEM
+-------------------------------------------------------------------------------
+  Login manager (Ly)
+    Look ................ Text login with the Doom fire animation.
+    File ................ /etc/ly/config.ini. The installer only enables Ly
+                          when no other login manager is enabled.
+  Power key
+    HandlePowerKey ...... ignore (/etc/systemd/logind.conf.d/power-key.conf),
+                          so the power key opens the rofi power menu instead
+                          of shutting down.
+  Lid
+    Lid closed .......... suspend, on battery, on charger and docked
+                          (/etc/systemd/logind.conf.d/lid.conf).
+  Audio
+    PipeWire ............ pipewire + pipewire-pulse (apps that speak
+                          PulseAudio) + pipewire-alsa + wireplumber (session
+                          manager). Control: pavucontrol, osd script.
+  Portals
+    xdg-desktop-portal .. -hyprland backend: screen sharing in Chrome/Meet and
+                          file pickers.
+
+
+-------------------------------------------------------------------------------
+ NETWORK
+-------------------------------------------------------------------------------
+  Stack
+    iwd ................. Handles Wi-Fi, including DHCP
+                          (/etc/iwd/main.conf: EnableNetworkConfiguration=true,
+                          NameResolvingService=systemd).
+    systemd-resolved .... DNS. /etc/resolv.conf -> stub-resolv.conf.
+    NetworkManager ...... If it is enabled, the installer keeps it and skips
+                          iwd; point the network pill at nmtui instead.
+  Tools
+    impala .............. Wi-Fi TUI (same author as bluetui). Opened from the
+                          Waybar network pill.
+    iwctl ............... iwd's command line, the fallback if impala fails.
+  Bluetooth
+    bluez ............... bluetooth.service enabled. bluez-utils adds
+                          bluetoothctl (command line).
+    bluetui ............. Bluetooth TUI, opened from the Waybar pill.
+
+
+-------------------------------------------------------------------------------
+ HYPRLAND  (~/.config/hypr/hyprland.lua)
+-------------------------------------------------------------------------------
+  Monitors
+    Default ............. Every monitor: preferred mode, auto position and
+                          scale. Add one hl.monitor block per screen at the
+                          top of hyprland.lua (names: hyprctl monitors).
+    Workspaces .......... Not pinned; an hl.workspace_rule example is there.
+  Autostart
+    random-wallpaper.sh . One random wallpaper per monitor (see Scripts).
+    cliphist ............ wl-paste watchers store text and image history.
+    waybar .............. Status bar on every monitor.
+    hypridle ............ Lock on request / before sleep.
+    hyprpolkitagent ..... Admin password window (started here because
+                          graphical-session.target may never start).
+  Environment
+    Cursor .............. XCURSOR/HYPRCURSOR theme Bibata-Modern-Amber, size 24.
+    Qt .................. QT_QPA_PLATFORMTHEME=gtk3 (Qt apps follow GTK dark).
+  Look
+    Gaps ................ 5 inside, 10 outside.
+    Borders ............. 3px. Active: gradient orange #ff9e64 -> blue #7aa2f7
+                          at 45°. Inactive: #3b4261.
+    Rounding ............ 8px.
+    Shadow .............. on, range 4.
+    Blur ................ size 6, 3 passes.
+    Layout .............. dwindle.
+  Animations
+    Speeds .............. All at 60% of the Hyprland defaults (faster).
+                          Windows pop in at 87%, workspaces fade.
+  Input
+    Keyboard ............ us, variant intl (dead keys: ' + a = á, ~ + n = ñ,
+                          ' + space = '). Right Alt is a normal Alt
+                          (kb_options lv3:ralt_alt), not AltGr.
+    Touchpad ............ 3-finger horizontal swipe changes workspace.
+  Window rules
+    waybar-popups ....... Windows with class "popup" (kitty --class popup)
+                          and pavucontrol float centered at 1000x640.
+    suppress-maximize ... Apps cannot maximize themselves.
+  Layer rules
+    rofi-blur ........... Blur behind rofi.
+    waybar-blur ......... Blur behind the bar pills only (ignore_alpha 0.1).
+  Keybinds (Super = Windows key; Super+K shows them all)
+    Modifier logic ...... Super alone = main action. Shift = move / variant.
+                          Alt = alternate version (incognito, force kill,
+                          focus mode, resize). Ctrl = system menus.
+    Apps
+      Super+Enter ....... kitty
+      Super+Alt+Enter ... Floating kitty (centered, for a quick command)
+      Super+Shift+Enter . Claude Code in kitty (--permission-mode auto)
+      Super+Space ....... App launcher (rofi)
+      Super+E ........... Nautilus
+      Super+B ........... Browser (Super+Alt+B: incognito). "browser" at the
+                          top of hyprland.lua; default google-chrome-stable.
+      Super+M ........... Email ("mailClient"; default betterbird).
+    Windows
+      Super+C ........... Close window (asks the app to quit; it can still
+                          ask to save)
+      Super+Alt+C ....... Force kill window (SIGKILL, no questions)
+      Super+V ........... Toggle floating
+      Super+Shift+V ..... Pop-out: floating, pinned on every workspace,
+                          1100x700 centered. Again: back to tiled.
+      Super+F ........... Fullscreen (the active window covers everything)
+      Super+Shift+F ..... No gaps, borders or rounded corners: square windows
+                          touching each other and the screen edges, with a
+                          4px space under Waybar. Again: restores them.
+      Super+Alt+F ....... Focus mode: the same plus no Waybar, windows stay
+                          tiled. Again: restores everything.
+      Super+P ........... Pseudo-tiling: the window keeps its own size inside
+                          its tile instead of stretching to fill it.
+      Super+J ........... Toggle split (side by side <-> stacked)
+      Super+Arrows ...... Move focus
+      Super+Shift+Arrows  Move window in that direction (also to the next
+                          monitor at the edge)
+      Super+Alt+Arrows .. Resize window by 50px (hold to repeat)
+      Super+Drag ........ Left button moves, right button resizes
+    Workspaces
+      Super+1..0 ........ Go to workspace (press it again to jump back to
+                          the previous one: workspace_back_and_forth)
+      Super+Shift+1..0 .. Move window there and follow it
+      Super+Shift+Alt+1..0  Move window there, stay where you are
+      Super+Shift+Alt+Arrows  Move the whole workspace to the monitor that way
+      Super+S ........... Scratchpad (Super+Shift+X: send window to it)
+      Super+Tab ......... Window switcher: every window on every workspace
+                          with its icon; type to filter, Enter jumps to it.
+      Super+D ........... Show desktop: empty workspace on this monitor.
+                          Again: back to the previous one.
+      Super+Wheel ....... Next/previous workspace
+    Screenshots (saved to ~/Pictures/Screenshots and copied)
+      Super+Shift+S/W/P . Region / window / monitor
+      Super+Shift+A ..... Region and annotate (Satty)
+      Print ............. Screenshot menu (also: click the window title in
+                          Waybar)
+    Screen recording (saved to ~/Videos/Recordings, no audio)
+      Super+Shift+R ..... Record a region (select it with the mouse). Same
+                          key again: stop and save.
+      Super+Shift+Alt+R . Record the monitor under the cursor. Again: stop.
+    Tools
+      Super+Ctrl+V ...... Clipboard history
+      Super+Shift+E ..... Emoji picker (types the emoji and copies it)
+      Super+Shift+C ..... Color picker (hyprpicker, hex copied)
+      Super+Shift+T ..... OCR: select an area, its text is copied (English and
+                          Spanish)
+      Super+K ........... Keybinds list
+      Super+= / Super+- . Magnifier: zoom in/out around the cursor (1x-5x,
+                          hold to repeat).
+      Super+Shift+- ..... Magnifier off (back to 1x).
+    System
+      Super+Ctrl+B ...... Bluetooth (bluetui)
+      Super+Ctrl+N ...... Network (impala)
+      Super+Ctrl+A ...... Audio (pavucontrol)
+      Super+Ctrl+P ...... Power menu (same as the power key)
+      Super+Ctrl+Esc .... System monitor (btop, floating)
+      Super+Ctrl+O ...... Docker manager (lazydocker, floating)
+      Super+Ctrl+D ...... Do not disturb on/off (same as the Waybar bell)
+      Super+Ctrl+U ...... Update the system (yay, floating; same as the
+                          updates pill)
+      Super+Ctrl+W ...... New random wallpaper on every monitor
+      Super+Ctrl+R ...... Restart Waybar (if it freezes or disappears)
+      Super+Ctrl+M ...... Mute / unmute the microphone (osd popup)
+      Super+Ctrl+T ...... Night light on/off (hyprsunset, 4500 K)
+      Super+Ctrl+I ...... Keep Awake on/off (same as the Waybar cup pill)
+      Super+Ctrl+S ...... Passwordless sudo for 15 min (nopasswd; asks the
+                          password once in the polkit window)
+      Super+Ctrl+Alt+S .. Passwordless sudo on/off, no time limit
+      Super+Ctrl+Alt+L .. Exit Hyprland
+    Media keys .......... Volume, mute, mic mute, brightness (via osd),
+                          play/pause/next/prev/stop (playerctl), keyboard
+                          backlight (brightnessctl).
+    Extra keys .......... Ready for external keyboards: Calculator, Mail,
+                          Home/WWW (browser), Search (launcher), Explorer /
+                          My Computer (files), Lock, Bluetooth.
+
+
+-------------------------------------------------------------------------------
+ WALLPAPER
+-------------------------------------------------------------------------------
+  awww
+    Wallpapers .......... ~/Pictures/Wallpapers. The installer puts a default
+                          one there if the folder is empty; add your own.
+    Behavior ............ Random image per monitor at login, 1s fade.
+
+
+-------------------------------------------------------------------------------
+ WAYBAR  (~/.config/waybar/config.jsonc + style.css)
+-------------------------------------------------------------------------------
+  General
+    Layout .............. One bar per monitor, top, 32px high, 6px margin.
+    Style ............... "Pills": transparent bar, every module in its own
+                          rounded capsule (#1f2335). Reload: pkill -SIGUSR2 waybar
+    Order ............... Left:   workspaces, brightness, audio, bluetooth,
+                                  window title, sudo shield, recording dot
+                          Center: do-not-disturb, clock, Keep Awake
+                          Right:  privacy, updates, Claude, network, battery,
+                                  user, power
+  Left
+    workspaces .......... Shows ids. Active = orange pill; visible on another
+                          monitor = orange text; urgent = red. Click to switch
+                          is set ("activate") but needs Waybar 0.16+ (the
+                          current release sends the old dispatch syntax).
+    backlight ........... Yellow, "󰃟 NN%" of the first backlight. Wheel changes
+                          every backlight together (osd script).
+    pulseaudio .......... Volume % plus mic icon in one pill. Click:
+                          pavucontrol (floating). Right click: mute output.
+                          Middle click: mute mic. Wheel: volume ±5% with OSD.
+    bluetooth ........... Blue icon, number of connected devices; tooltip
+                          lists them with battery. Click: bluetui (floating).
+    custom/sudo ......... Red "󰒃" (same icon as the starship sudo module), only
+                          while sudo needs no password. Hover: until when.
+                          Click turns it off. nopasswd script, signal 12.
+    custom/recording .... Red "●" next to the window title, only while
+                          screenrec records. Click stops and saves.
+    window .............. Title of the focused window (dim), max 50 chars;
+                          hidden on empty workspaces. Click: screenshot menu.
+  Center
+    custom/dnd .......... Bell, green while notifications show. Click toggles
+                          mako do-not-disturb (bell turns red with zZ). Right click: restore the last
+                          dismissed notification.
+    clock ............... Orange bold "Sat 10 Oct  14:05". Hover: calendar
+                          with ISO week numbers on the right (small, dim).
+                          Wheel: change month. Right click: month/year view.
+                          Middle click: back to today.
+    custom/keepawake .... Keep Awake, cup icon: green while on (no lock or
+                          suspend), red when off; no notification. Also
+                          Super+Ctrl+I. keepawake script, signal 10.
+  Right
+    privacy ............. Red, only while the screen or mic is being used.
+    custom/updates ...... Yellow "󰏗 N", only when updates are pending (count
+                          from update-count). Click: yay in a floating kitty;
+                          when yay ends the count refreshes at once (signal 9).
+    custom/claude ....... "󰚩 S% · W%": Claude plan left, 5-hour session and
+                          weekly. Yellow at ≤25%, red at ≤10%. Hover: reset
+                          times and today's tokens. Click: rofi cost summary.
+                          Data: waybar-ccusage script (see Scripts). No
+                          login or no data: "󰚩 AI" (point the script at any
+                          agent's usage).
+    network ............. Green. Wi-Fi: "󰤨 SSID | speed"; cable: "󰈀 speed".
+                          Hover: signal, IP, down/up. Click: impala (floating).
+    battery ............. Battery found automatically. Bold "NN%"; charging shows watts. The icon color fades
+                          as it drains (the number stays white): green >70, lime ≤70, yellow ≤50, orange
+                          ≤30, red ≤15, dark red ≤5; green while charging.
+                          Click: battery menu.
+    user ................ Round profile picture (waybar/avatar.png, a round
+                          copy of ~/.face) + name + uptime "0d 16h 31m".
+                          Click does nothing.
+    custom/power ........ Red ⏻, turns red-filled on hover. Click: power menu.
+  Removed
+    tray ................ Removed (not used). Put "tray" back in
+                          modules-right to restore it.
+
+
+-------------------------------------------------------------------------------
+ ROFI  (~/.config/rofi)
+-------------------------------------------------------------------------------
+  General
+    Base ................ davatorium rofi with adi1090x themes (GPL-3.0); only
+                          the themes these menus use are included.
+    Colors .............. colors/rice.rasi (palette above, orange selection),
+                          used by every launcher, applet and power menu theme.
+    Font ................ JetBrainsMono Nerd Font in every theme.
+    Icons ............... Papirus-Dark.
+    config.rasi ......... Behavior for every menu: scroll-method 1 (the list
+                          moves one row at a time), one click runs an entry
+                          (me-accept-entry MousePrimary). Menus have no title
+                          unless noted.
+  Menus (scripts in ~/.config/rofi/scripts)
+    launcher.sh ......... Super+Space. Theme launchers/type-3/style-2. App
+                          list built once into $XDG_RUNTIME_DIR/rofi-apps.list
+                          by apps.sh (fast: ~0.13s).
+    powermenu.sh ........ Power key / ⏻ pill / Super+Ctrl+P. Theme
+                          powermenu/type-4/style-1: solid black fullscreen
+                          (the only menu that is not see-through), sizes in %
+                          of the monitor so it fits every screen. Prompt "Are
+                          you leaving?" + uptime. Feather icons.
+                          Lock, suspend, logout, reboot, shutdown; all but lock
+                          ask for confirmation: orange bold "Are you sure?",
+                          buttons ENTER (green when selected) and ESC (red),
+                          the keys that do the same. Esc never runs anything. Lock
+                          waits 0.5s so hyprlock's screenshot skips the menu.
+    battery.sh .......... Battery pill. Theme applets/type-5/battery.rasi
+                          (style-1 + images/battery.png, nothing over it),
+                          rice colors,
+                          rounded, 640px. Shows remaining %, status, power
+                          draw (W), health % and cycle count.
+                          Reads /sys directly (first BAT*, no acpi).
+    claude.sh ........... Claude pill. Read-only rounded list with the output
+                          of claude-costs (no search bar).
+    windows.sh .......... Super+Tab. Window switcher (hyprctl clients ->
+                          rofi type-1/style-5 with app icons, search only),
+                          focuses the chosen window.
+    clipboard.sh ........ Super+Ctrl+V. cliphist history with image thumbnails.
+                          Enter copy, Alt+P preview image, Alt+Delete remove,
+                          Alt+Shift+Delete clear all. No title, search only.
+    emoji.sh ............ Super+Shift+E. rofi-emoji plugin as an 8x5 grid of
+                          emojis only (type-2/style-7). Search by name
+                          (English), Enter types it and copies it, Alt+1 copy.
+                          Scrollbar on the right. Skin tone variants hidden
+                          (~/.local/share/rofi-emoji/emojis.txt, rebuilt when
+                          rofi-emoji updates). "@food", "@flag", "@sym"... limit
+                          the search to a category. Fills row by row
+                          (flow: horizontal) so arrows move like reading.
+    keybinds.sh ......... Super+K. All Hyprland binds read live from hyprctl,
+                          grouped by category. Special keys that just do what
+                          is printed on them (volume, media...) are hidden.
+                          Bold title " Keybinds", orange category headers,
+                          gray selection, clicks do nothing (wheel scrolls).
+                          Workspace binds collapsed to [0-9], arrow binds to
+                          [Arrows]. Last section: Clipboard menu keys.
+                          Typing a category name lists all its binds (each
+                          row carries its category as hidden rofi "meta").
+    screenshot.sh ....... Print. Icon menu: desktop, area, window, area +
+                          annotate, 5s and 10s delay (hyprshot + satty).
+  Animation
+    Layers .............. Fade in/out (Hyprland layersIn/Out).
+
+
+-------------------------------------------------------------------------------
+ TERMINAL
+-------------------------------------------------------------------------------
+  kitty (~/.config/kitty/kitty.conf)
+    Font ................ JetBrainsMono Nerd Font 11, padding 12.
+    Colors .............. Background #000000 (opaque), text #d8d8d8,
+                          Tokyo Night palette.
+    Cursor .............. Orange #ff9e64 beam with cursor trail.
+    Tabs ................ Powerline style.
+    Copy on select ...... Selecting text copies it to the clipboard.
+    Super+Backspace ..... Deletes from the cursor to the start of the line
+                          (sends Ctrl+U; normal keyboard mode only, so
+                          Claude Code and vim keep their own keys).
+    Super+Delete ........ Deletes from the cursor to the end of the line
+                          (sends Ctrl+K, same rule).
+  readline (~/.inputrc)
+    Ctrl+Backspace ...... Deletes the word before the cursor in bash
+                          (kitty sends ^H -> backward-kill-word).
+    Ctrl+Delete ......... Deletes the word after the cursor
+                          (kitty sends ESC[3;5~ -> kill-word).
+    Base ................ Includes /etc/inputrc first.
+  starship (~/.config/starship.toml)
+    Shape ............... Two lines. Line 1: "╭─" + rounded pills: OS, user
+                          (root/SSH only), folder, git, languages, sudo,
+                          updates, time ... command duration on the right.
+                          Line 2: "╰─❯" (orange; red after an error).
+    Folder .............. Yellow #f8d775, full path with icons for Documents,
+                          Downloads, Pictures, Music, Videos, Desktop and
+                          .config.
+    Duration ............ Every command, with milliseconds.
+    Updates ............. Pending count from ~/.cache/update-count.
+  bash (~/.bashrc)
+    Prompt .............. starship (PS0 adds a blank line before output).
+    Tools ............... zoxide (smart cd), fzf keybindings.
+    Aliases ............. ls/ll/la/tree -> eza (yellow folders), cat -> bat.
+    Editor .............. EDITOR and VISUAL = nvim.
+    Start ............... fastfetch runs in every new terminal.
+  fastfetch (~/.config/fastfetch/config.jsonc)
+    Logo ................ The distro logo. For a picture: "type": "kitty-direct"
+                          and "source": "<file.png>".
+    Modules ............. title, OS, host, kernel, packages, uptime, boot
+                          manager, WM, terminal, shell, font, login manager,
+                          locale, CPU, RAM and swap (labeled "RAM"/"swap"),
+                          disk (/home), battery, color circles. Nerd Font
+                          icons, no line wrap.
+
+
+-------------------------------------------------------------------------------
+ NOTIFICATIONS  (mako, ~/.config/mako/config)
+-------------------------------------------------------------------------------
+  Look
+    Popups .............. Top right, 360px, rounded 14px, dark #1a1b26,
+                          JetBrainsMono 11. Bold title, softer body text,
+                          app icon on the left. Max 4 visible.
+    Borders ............. Orange (normal), gray (low), red (critical).
+    Timeout ............. 30s. Critical ones stay until clicked.
+  Modes
+    do-not-disturb ...... Hides notifications (they are still stored).
+                          Toggled from the Waybar bell.
+  OSD
+    app-name=osd ........ Volume/mic popups from the osd script: top center,
+                          280px, blue border, orange progress bar, 1.5s, still
+                          shown in do-not-disturb, never stored in history.
+  History
+    Where ............... In memory only; restarting mako clears it.
+
+
+-------------------------------------------------------------------------------
+ LOCK & IDLE
+-------------------------------------------------------------------------------
+  hyprlock (~/.config/hypr/hyprlock.conf)
+    Background .......... Blurred, darkened screenshot of the desktop.
+    Layout .............. Big orange clock (JetBrainsMono ExtraBold 96),
+                          date, round profile picture with orange ring,
+                          password pill (orange border; yellow while checking
+                          or Caps Lock; red "Wrong password"), user and
+                          battery at the bottom.
+  hyprtoolkit (~/.config/hypr/hyprtoolkit.conf)
+    Used by ............. hyprpolkitagent (the admin password window).
+    font_family ......... "Noto Sans, JetBrainsMono Nerd Font Propo": the
+                          Propo font draws the password eye icon at full
+                          width (the default fallback clipped it).
+  hyprpolkitagent
+    Message ............. Shows the polkit action's <message> only when the
+                          request has no command line (plain pkexec shows
+                          "Allow this action?" + the command instead). It is
+                          Pango markup: the nopasswd ones are orange and bold
+                          (<span color='#ff9e64' weight='bold'
+                          size='15pt'>, the title's size). Max 120
+                          bytes counting the markup; ONE line only (a second
+                          line is dropped), cut with "..." past
+                          password_field_width. Each
+                          message is one CDATA section with no entities or
+                          real newlines: polkit keeps only the last piece the
+                          XML parser hands it (it splits at both).
+    Width ............... The message line is cut at password_field_width
+                          (340). A wider window_width was ignored (window
+                          stayed 460) and a 480 box vanished: keep defaults.
+    Not configurable .... The title "Authentication Required" and the other
+                          labels (plain text in the agent's code). Window:
+                          460-600 wide.
+    Cancel .............. /etc/pam.d/polkit-1 (copy in ~/.config/arch-melon/system):
+                          closing the window (Cancel/Esc/Super+C) is not
+                          counted by faillock; wrong passwords still are.
+                          faillock.conf: unlock_time = 60 (1 min lock).
+  hypridle (~/.config/hypr/hypridle.conf)
+    lock_cmd ............ Starts hyprlock unless one is already running.
+    before_sleep_cmd .... Locks before suspend.
+    Idle timers ......... 15 min idle: lock (hyprlock). 30 min idle: suspend.
+                          Keep Awake (Super+Ctrl+I / cup pill) blocks both.
+  Profile picture
+    ~/.face ............. Used by hyprlock and, as a round copy
+                          (~/.config/waybar/avatar.png), by Waybar. The
+                          installer adds a default one if missing and makes
+                          the round copy: replace ~/.face and run it again.
+
+
+-------------------------------------------------------------------------------
+ APPEARANCE
+-------------------------------------------------------------------------------
+  GTK
+    Theme ............... Adwaita-dark, prefer-dark (gsettings + gtk-3.0 and
+                          gtk-4.0 settings.ini).
+    Icons ............... Papirus-Dark, folders "paleorange" (papirus-folders;
+                          a pacman hook keeps the color after updates).
+  Cursor
+    Bibata-Modern-Amber . Size 24. Set in Hyprland env, gsettings, GTK
+                          settings.ini and ~/.icons/default/index.theme.
+  Fonts
+    JetBrainsMono Nerd .. ttf-jetbrains-mono-nerd: the rice font, with icons.
+    Noto ................ noto-fonts, noto-fonts-cjk (Chinese/Japanese/Korean),
+                          noto-fonts-emoji (color emoji). Fallback everywhere.
+  Toolkits
+    GTK legacy .......... gnome-themes-extra: dark Adwaita for GTK2/3 apps.
+    Qt .................. qt5-wayland / qt6-wayland: Qt apps run natively on
+                          Wayland and follow GTK dark (QT_QPA_PLATFORMTHEME).
+
+
+-------------------------------------------------------------------------------
+ SCRIPTS  (~/.local/bin unless noted)
+-------------------------------------------------------------------------------
+  osd
+    What ................ Volume, mic and brightness keys and Waybar scroll.
+                          Volume ±5% (max 100%), mute; brightness ±5% linear
+                          on every backlight (min 2%). Volume/mic show a
+                          mako progress popup that replaces itself; brightness
+                          shows nothing (the pill shows it).
+  update-count
+    What ................ Counts pending updates (checkupdates + yay -Qua) and
+                          writes the number to ~/.cache/update-count.
+    When ................ update-count.timer (user unit): 2 min after boot,
+                          then hourly; also after updating from the Waybar pill.
+  waybar-ccusage
+    What ................ Waybar Claude pill. Asks Anthropic's usage endpoint
+                          (same as /usage in Claude Code, with your own login
+                          token, only to api.anthropic.com) for session/weekly
+                          %. Cached in $XDG_RUNTIME_DIR/claude-usage.json:
+                          max one request every 5 minutes for all 3 bars.
+                          Today's tokens come from ccusage (offline).
+  claude-costs
+    What ................ Text table: the 7 days of the current week (aligned
+                          to the weekly limit reset, Wed->Tue), input/output/
+                          cache tokens and API-price cost per day; this week,
+                          last week, this month; and "Pro $20/mo vs $X (N×)".
+                          Costs are what the API would charge, not real charges.
+  screenrec
+    What ................ Screen recording toggle with gpu-screen-recorder
+                          (GPU encoding through VA-API, 60 fps): "region"
+                          (slurp) or "monitor" (focused one). Running again
+                          stops it (SIGINT so the file is closed properly).
+                          Notifies when it starts and when the video is saved.
+                          "status" prints the JSON for the Waybar red dot
+                          (signal 11, sent when recording starts and stops).
+  ocr
+    What ................ slurp an area -> grim -> tesseract (eng+spa) ->
+                          wl-copy. Notifies with the first part of the text.
+  nightlight
+    What ................ Toggles hyprsunset at 4500 K (warmer colors).
+  nopasswd
+    What ................ Passwordless sudo on demand: writes
+                          /etc/sudoers.d/zz-nopasswd (NOPASSWD: ALL, checked
+                          with visudo). "nopasswd" = 15 minutes, a
+                          transient user timer (nopasswd-off) runs "off";
+                          "toggle" = on with no limit / off. Turning it on
+                          asks the password once: pkexec runs
+                          /usr/local/bin/nopasswd-15min or -nolimit (copies
+                          of nopasswd-root), and their polkit actions
+                          (org.archmelon.nopasswd.policy) put "Passwordless
+                          sudo for 15 min" / "no limit + how to turn off" in
+                          the window instead of a command. Notifies via mako
+                          (red border) when it turns on; "status" = JSON for
+                          Waybar (signal 12). First use (or "nopasswd setup")
+                          installs those files plus /etc/tmpfiles.d/
+                          nopasswd.conf, which deletes the drop-in at boot.
+  keepawake
+    What ................ Keep Awake toggle: holds a systemd "idle" inhibitor
+                          (systemd-inhibit) that hypridle respects. "status"
+                          prints the JSON for the Waybar pill.
+  random-wallpaper.sh (~/.config/hypr/scripts)
+    What ................ Picks a random image from ~/Pictures/Wallpapers for
+                          each monitor with awww (starts awww-daemon if needed).
+
+
+-------------------------------------------------------------------------------
+ APPS & TOOLS  (package lists: packages/ in the repo)
+-------------------------------------------------------------------------------
+  Core (installed always)
+    Files ............... Nautilus (+ nautilus-open-any-terminal: right click >
+                          Open in kitty), sushi (Space = quick preview),
+                          file-roller (archives).
+    Media ............... imv (images), mpv (video and music).
+    Editors ............. nvim (EDITOR/VISUAL), Mousepad.
+    Desktop tools ....... hyprpicker, hyprshot + satty, gpu-screen-recorder,
+                          tesseract (English + Spanish), hyprsunset, cliphist,
+                          brightnessctl, playerctl, btop, gnome-calculator.
+    Passwords ........... gnome-keyring + seahorse; hyprpolkitagent (admin
+                          password window).
+    Packages ............ yay (AUR, installed if missing), pacman-contrib
+                          (checkupdates, used by update-count).
+  Extras (the installer asks)
+    google-chrome ....... Super+B. betterbird-bin: Super+M.
+    Docker .............. docker, docker-compose, docker-buildx, lazydocker
+                          (Super+Ctrl+O).
+    ccusage ............. Claude usage for the Claude pill and its cost table
+                          (needs a Claude Code login; without one the pill
+                          is a plain "󰚩 AI", ready for another agent).
+  Not installed (pick for your hardware)
+    VA-API driver ....... For screenrec: intel-media-driver (Intel) or
+                          libva-mesa-driver (AMD). Check with vainfo.
+
+
+-------------------------------------------------------------------------------
+ INSTALLATION & FILES
+-------------------------------------------------------------------------------
+  install.sh
+    What ................ Installs packages/, copies home/ into $HOME, installs
+                          system/ (after listing it), enables the services.
+                          Asks before each big step. Run it again to update.
+    Backups ............. Every file it replaces goes first to
+                          ~/.config/arch-melon/backup-<date>/ (home/ and
+                          system/ inside).
+  ~/.config/arch-melon/
+    system/ ............. Copies of the system files (nopasswd setup reads them
+                          from here).
+    SYSTEM-CONFIG.txt ... This file. system-files.md: the system files.
+    source .............. Path of the repo clone it was installed from.
+  Fonts
+    ~/.local/share/fonts  From the adi1090x rofi themes: Icomoon-Feather (power
+                          menu icons), GrapeNuts, Iosevka and JetBrains Mono
+                          Nerd Font copies.
+  Not included
+    GRUB theme .......... The setup was made with "retro_game" (CC BY-NC-SA,
+                          not redistributed here); any GRUB theme works.
+  Agent guide
+    ~/.claude/skills/arch-melon/SKILL.md  Claude Code skill: where things
+                          live, how to adapt to new hardware, troubleshooting.
+
+===============================================================================

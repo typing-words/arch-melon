@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Waybar custom module: Claude subscription limits, shown as % remaining.
+# Limits come from the same usage endpoint Claude Code's /usage uses (your own
+# login token, sent only to api.anthropic.com); token counts come from local
+# transcripts via ccusage (offline). The endpoint is undocumented and may change.
+
+creds="$HOME/.claude/.credentials.json"
+# No Claude Code login: a plain "AI" pill, ready to point at another agent's usage
+[ -f "$creds" ] || { echo '{"text":"󰚩 AI","class":"idle","tooltip":"No Claude Code login. This pill (~/.local/bin/waybar-ccusage) can show any agent'"'"'s usage"}'; exit 0; }
+# One bar per monitor runs this script, so the API answer is cached and shared:
+# at most one request every 5 minutes (the endpoint rate-limits frequent polling)
+cache="${XDG_RUNTIME_DIR:-/tmp}/claude-usage.json"
+max_age=300
+
+age=$(( $(date +%s) - $(stat -c %Y "$cache" 2>/dev/null || echo 0) ))
+if (( age >= max_age )); then
+    token=$(jq -r '.claudeAiOauth.accessToken // empty' "$creds" 2>/dev/null)
+    fresh=$(curl -sf -m 10 https://api.anthropic.com/api/oauth/usage \
+        -H "Authorization: Bearer $token" \
+        -H "anthropic-beta: oauth-2025-04-20" 2>/dev/null)
+    if [[ -n $token && -n $fresh ]]; then
+        echo "$fresh" > "$cache.tmp" && mv "$cache.tmp" "$cache"
+    else
+        touch "$cache" 2>/dev/null   # failed: wait another 5 minutes before retrying
+    fi
+fi
+usage=$(cat "$cache" 2>/dev/null)
+if ! jq -e .five_hour >/dev/null 2>&1 <<<"$usage"; then
+    # Never fetched yet (offline, rate limited or expired login; Claude Code refreshes it)
+    echo '{"text":"󰚩 AI","class":"idle","tooltip":"Usage unavailable (offline, rate limited, or open Claude Code to refresh the login)"}'
+    exit 0
+fi
+
+today=$(ccusage daily --json --offline --since "$(date +%Y%m%d)" 2>/dev/null)
+
+jq -cn --argjson u "$usage" --argjson d "${today:-{\}}" '
+    def left: 100 - (.utilization // 0) | round;
+    def tokens: if . >= 1000000 then (. / 100000 | round / 10 | tostring) + "M"
+                elif . >= 1000 then (. / 1000 | round | tostring) + "k" else tostring end;
+    # "in 1h 32m (14:50)" from an ISO timestamp
+    def resets: (sub("\\.[0-9]+"; "") | sub("\\+00:00$"; "Z") | fromdateiso8601) as $t
+        | (($t - now) / 60 | floor) as $m
+        | (if $m >= 1440 then "\($m / 1440 | floor)d \($m % 1440 / 60 | floor)h"
+           else "\($m / 60 | floor)h \($m % 60)m" end)
+          + " (" + ($t | localtime | strftime("%a %H:%M")) + ")";
+    ($u.five_hour | left) as $s
+    | ($u.seven_day | left) as $w
+    | ([$d.daily[]?.inputTokens] | add // 0) as $in
+    | ([$d.daily[]?.outputTokens] | add // 0) as $out
+    | ([$d.daily[]?.cacheReadTokens] | add // 0) as $cache
+    | { text: "󰚩 \($s)% · \($w)%",
+        class: (if ([$s, $w] | min) <= 10 then "critical" elif ([$s, $w] | min) <= 25 then "warning" else "normal" end),
+        tooltip: ([
+            "<b>Claude · remaining</b>",
+            "Session (5h):  \($s)%   resets in \($u.five_hour.resets_at | resets)",
+            "Weekly:        \($w)%   resets in \($u.seven_day.resets_at | resets)",
+            "",
+            "<b>Today (Claude Code)</b>",
+            "Input:  \($in | tokens)   Output: \($out | tokens)   Cache read: \($cache | tokens)"
+          ] | join("\n")) }'
