@@ -414,7 +414,7 @@ local shotDir = "$HOME/Pictures/Screenshots"
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("hyprshot -z -m region -o " .. shotDir), { description = "Screenshot region" })
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("hyprshot -m window -o " .. shotDir), { description = "Screenshot window" })
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.exec_cmd("hyprshot -m output -o " .. shotDir), { description = "Screenshot monitor" })
-hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("hyprshot -z -m region -r | satty --filename - --early-exit --copy-command wl-copy --output-filename " .. shotDir .. "/satty-%Y%m%d-%H%M%S.png"), { description = "Screenshot region and annotate (Satty)" })
+hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("hyprshot -z -m region --raw | satty --filename - --early-exit --copy-command wl-copy --output-filename " .. shotDir .. "/satty-%Y%m%d-%H%M%S.png"), { description = "Screenshot region and annotate (Satty)" })
 hl.bind("Print", hl.dsp.exec_cmd("$HOME/.config/rofi/scripts/screenshot.sh"), { description = "Screenshot menu" })
 
 -- Screen recording (~/Videos/Recordings): same key again stops it
