@@ -257,7 +257,8 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
                           agent's usage).
     network ............. Green. Wi-Fi: "󰤨 SSID | speed"; cable: "󰈀 speed".
                           Hover: signal, IP, down/up. Click: impala (floating).
-    battery ............. Battery found automatically. Bold "NN%"; charging shows watts. The icon color fades
+    battery ............. The laptop battery, pinned by install.sh ("bat"; device batteries like wireless
+                          mice are left out). Bold "NN%"; charging shows watts. The icon color fades
                           as it drains (the number stays white): green >70, lime ≤70, yellow ≤50, orange
                           ≤30, red ≤15, dark red ≤5; green while charging.
                           Click: battery menu.

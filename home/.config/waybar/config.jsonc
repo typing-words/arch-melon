@@ -176,7 +176,8 @@
     },
 
     "battery": {
-        // Battery and adapter are found automatically; to pin one add "bat": "BAT0", "adapter": "AC"
+        // install.sh pins "bat" to the laptop battery when there is exactly one (device batteries
+        // like wireless mice can crash Waybar); otherwise Waybar finds it, and the adapter, by itself
         "interval": 10,
         // Each state colors only the icon: green -> lime -> yellow -> orange -> red -> dark red
         "states": { "high": 100, "good": 70, "half": 50, "warning": 30, "critical": 15, "dying": 5 },

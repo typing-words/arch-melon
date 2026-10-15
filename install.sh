@@ -70,6 +70,18 @@ chmod +x "$HOME"/.local/bin/* "$HOME"/.config/rofi/scripts/*.sh "$HOME"/.config/
 
 # Machine-specific values
 sed -i "s|/home/USER/|$HOME/|" "$HOME/.config/waybar/config.jsonc"
+# Pin the laptop battery: Waybar's auto-detection also takes device batteries (wireless
+# mice, headsets; scope=Device) and crashes when one of them disappears
+bats=()
+for ps in /sys/class/power_supply/*; do
+    [ "$(cat "$ps/type" 2>/dev/null)" = Battery ] || continue
+    [ "$(cat "$ps/scope" 2>/dev/null)" = Device ] && continue
+    bats+=("$(basename "$ps")")
+done
+if [ ${#bats[@]} -eq 1 ]; then
+    sed -i "s|^\(\s*\)\"battery\": {|&\n\1    \"bat\": \"${bats[0]}\",|" "$HOME/.config/waybar/config.jsonc"
+    info "Waybar battery: ${bats[0]}"
+fi
 if [ ! -f "$HOME/.face" ]; then
     cp "$REPO/assets/defaults/face.png" "$HOME/.face"
     info "Profile picture: default one in ~/.face (replace it with yours, then run ./install.sh again)"

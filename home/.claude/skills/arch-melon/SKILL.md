@@ -19,6 +19,7 @@ Never assume monitor names, batteries or paths. Check:
 hyprctl monitors                      # monitor names, resolution, scale, position
 ls /sys/class/backlight               # backlight devices (intel_backlight, amdgpu_bl0, ...)
 ls /sys/class/power_supply            # battery (BAT0/BAT1) and adapter (AC/ADP0/ADP1); none on a desktop
+cat /sys/class/power_supply/*/scope   # "Device" = mouse/headset battery, not the laptop's (install.sh pins the other one in Waybar)
 hyprctl devices                       # keyboards, touchpads, tablets
 hyprctl version; pacman -Q hyprland waybar hyprpolkitagent
 lspci -k | grep -A3 -E "VGA|3D"       # GPU (matters for screen recording)
