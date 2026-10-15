@@ -72,8 +72,8 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
     random-wallpaper.sh . One random wallpaper per monitor (see Scripts).
     cliphist ............ wl-paste watchers store text and image history.
                           Kept in RAM (~/.config/cliphist/config: db-path in
-                          /run/user/<uid>): never on disk, gone at logout,
-                          shutdown or reboot.
+                          /run/user/<uid>): never on disk, gone at shutdown
+                          or reboot.
     waybar .............. Status bar on every monitor.
     hypridle ............ Lock on request / before sleep.
     hyprpolkitagent ..... Admin password window (started here because

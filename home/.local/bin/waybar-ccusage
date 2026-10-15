@@ -37,12 +37,13 @@ jq -cn --argjson u "$usage" --argjson d "${today:-{\}}" '
     def left: 100 - (.utilization // 0) | round;
     def tokens: if . >= 1000000 then (. / 100000 | round / 10 | tostring) + "M"
                 elif . >= 1000 then (. / 1000 | round | tostring) + "k" else tostring end;
-    # "in 1h 32m (14:50)" from an ISO timestamp
-    def resets: (sub("\\.[0-9]+"; "") | sub("\\+00:00$"; "Z") | fromdateiso8601) as $t
+    # "in 1h 32m (14:50)" from an ISO timestamp; null = the window has not started yet
+    def resets: if . == null then "when you next use it" else
+        (sub("\\.[0-9]+"; "") | sub("\\+00:00$"; "Z") | fromdateiso8601) as $t
         | (($t - now) / 60 | floor) as $m
         | (if $m >= 1440 then "\($m / 1440 | floor)d \($m % 1440 / 60 | floor)h"
            else "\($m / 60 | floor)h \($m % 60)m" end)
-          + " (" + ($t | localtime | strftime("%a %H:%M")) + ")";
+          + " (" + ($t | localtime | strftime("%a %H:%M")) + ")" end;
     ($u.five_hour | left) as $s
     | ($u.seven_day | left) as $w
     | ([$d.daily[]?.inputTokens] | add // 0) as $in
@@ -52,8 +53,8 @@ jq -cn --argjson u "$usage" --argjson d "${today:-{\}}" '
         class: (if ([$s, $w] | min) <= 10 then "critical" elif ([$s, $w] | min) <= 25 then "warning" else "normal" end),
         tooltip: ([
             "<b>Claude · remaining</b>",
-            "Session (5h):  \($s)%   resets in \($u.five_hour.resets_at | resets)",
-            "Weekly:        \($w)%   resets in \($u.seven_day.resets_at | resets)",
+            "Session (5h):  \($s)%   resets \($u.five_hour.resets_at | resets | if startswith("when") then . else "in " + . end)",
+            "Weekly:        \($w)%   resets \($u.seven_day.resets_at | resets | if startswith("when") then . else "in " + . end)",
             "",
             "<b>Today (Claude Code)</b>",
             "Input:  \($in | tokens)   Output: \($out | tokens)   Cache read: \($cache | tokens)"
