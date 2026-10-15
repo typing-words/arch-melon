@@ -103,7 +103,7 @@ red needs it now.
 - **Fast.** All animations run at 60% of Hyprland's default time. Windows pop
   in, workspaces fade.
 - **Quiet.** Things only show up when they matter: the updates pill hides at
-  zero, the privacy pill only appears while the mic or screen is in use.
+  zero, the AI pill without a Claude Code login, the privacy pill only appears while the mic or screen is in use.
 - **One exception.** The power menu covers the screen in solid black, so
   leaving the session never feels like just another menu.
 
@@ -148,12 +148,12 @@ red needs it now.
 | window | Focused window title, dim | Screenshot menu | Hidden on empty workspaces |
 | custom/sudo | Red `󰒃` while sudo needs no password | Turn it off | Hidden otherwise · hover: until when |
 | custom/recording | Red `●` while recording the screen | Stop and save | Hidden otherwise |
+| custom/updates | `󰏗 N`, only when there are updates | yay in a floating kitty | Count refreshes right after |
 | custom/dnd | Bell (green; red with zZ in do-not-disturb) | Toggle do-not-disturb | Right: restore last notification |
 | clock | `Sat 10 Oct  14:05`, orange bold | | Hover: calendar with ISO weeks · Wheel: month · Right: month/year · Middle: today |
 | custom/keepawake | Keep Awake cup: green on (no lock or suspend), red off | Toggle | Also `Super + Ctrl + I` |
 | privacy | Red, only while screen or mic is in use | | |
-| custom/updates | `󰏗 N`, only when there are updates | yay in a floating kitty | Count refreshes right after |
-| custom/claude | `󰚩 S% · W%`: Claude plan left (session · week) | Cost table in rofi | Yellow ≤25%, red ≤10% · plain `󰚩 AI` without a Claude Code login, ready for any agent |
+| custom/claude | `󰚩 S% · W%`: Claude plan left (session · week) | Cost table in rofi | Yellow ≤25%, red ≤10% · hidden without a Claude Code login |
 | network | `󰤨 SSID \| speed` in green | impala | Hover: signal, IP, down/up |
 | battery | Bold `NN%`, watts while charging | Battery menu | Icon fades green → yellow → orange → red → dark red (≤5%); green charging |
 | user | Round profile picture, name, uptime | | |

@@ -234,6 +234,9 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
     window .............. Title of the focused window (dim), max 50 chars;
                           hidden on empty workspaces. Click: screenshot menu.
   Center
+    custom/updates ...... Yellow "󰏗 N", only when updates are pending (count
+                          from update-count). Click: yay in a floating kitty;
+                          when yay ends the count refreshes at once (signal 9).
     custom/dnd .......... Bell, green while notifications show. Click toggles
                           mako do-not-disturb (bell turns red with zZ). Right click: restore the last
                           dismissed notification.
@@ -246,15 +249,12 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
                           Super+Ctrl+I. keepawake script, signal 10.
   Right
     privacy ............. Red, only while the screen or mic is being used.
-    custom/updates ...... Yellow "󰏗 N", only when updates are pending (count
-                          from update-count). Click: yay in a floating kitty;
-                          when yay ends the count refreshes at once (signal 9).
     custom/claude ....... "󰚩 S% · W%": Claude plan left, 5-hour session and
                           weekly. Yellow at ≤25%, red at ≤10%. Hover: reset
                           times and today's tokens. Click: rofi cost summary.
-                          Data: waybar-ccusage script (see Scripts). No
-                          login or no data: "󰚩 AI" (point the script at any
-                          agent's usage).
+                          Data: waybar-ccusage script (see Scripts). Hidden
+                          without a Claude Code login; logged in but no data
+                          yet: a dim "󰚩 AI".
     network ............. Green. Wi-Fi: "󰤨 SSID | speed"; cable: "󰈀 speed".
                           Hover: signal, IP, down/up. Click: impala (floating).
     battery ............. The laptop battery, pinned by install.sh ("bat"; device batteries like wireless
@@ -558,7 +558,7 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
     google-chrome ....... Super+B.
     ccusage ............. Token counts for the AI pill and its cost table
                           (with a Claude Code login; without one the pill is
-                          a plain "󰚩 AI", ready for another agent).
+                          hidden).
     betterbird-bin ...... Super+M.
   Not installed
     Docker .............. Super+Ctrl+O opens lazydocker: install docker,

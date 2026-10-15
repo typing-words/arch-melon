@@ -9,10 +9,9 @@
     "margin-right": 10,
 
     "modules-left": ["hyprland/workspaces", "backlight", "pulseaudio", "bluetooth", "hyprland/window", "custom/sudo", "custom/recording"],
-    "modules-center": ["custom/dnd", "clock", "custom/keepawake"],
+    "modules-center": ["custom/updates", "custom/dnd", "clock", "custom/keepawake"],
     "modules-right": [
-        "privacy", "custom/updates",
-        "custom/claude", "network", "battery", "user", "custom/power"
+        "privacy", "custom/claude", "network", "battery", "user", "custom/power"
     ],
 
     // Click needs a Waybar build that speaks the Lua dispatch syntax (waybar-git until the next release)

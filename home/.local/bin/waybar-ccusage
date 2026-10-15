@@ -5,8 +5,8 @@
 # transcripts via ccusage (offline). The endpoint is undocumented and may change.
 
 creds="$HOME/.claude/.credentials.json"
-# No Claude Code login: a plain "AI" pill, ready to point at another agent's usage
-[ -f "$creds" ] || { echo '{"text":"󰚩 AI","class":"idle","tooltip":"No Claude Code login. This pill (~/.local/bin/waybar-ccusage) can show any agent'"'"'s usage"}'; exit 0; }
+# No Claude Code login: empty text hides the pill; it shows up once a login exists
+[ -f "$creds" ] || { echo '{"text":""}'; exit 0; }
 # One bar per monitor runs this script, so the API answer is cached and shared:
 # at most one request every 5 minutes (the endpoint rate-limits frequent polling)
 cache="${XDG_RUNTIME_DIR:-/tmp}/claude-usage.json"
