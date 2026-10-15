@@ -70,6 +70,8 @@ chmod +x "$HOME"/.local/bin/* "$HOME"/.config/rofi/scripts/*.sh "$HOME"/.config/
 
 # Machine-specific values
 sed -i "s|/home/USER/|$HOME/|" "$HOME/.config/waybar/config.jsonc"
+# Clipboard history in RAM: /run/user/<your uid>
+sed -i "s|/run/user/UID/|/run/user/$(id -u)/|" "$HOME/.config/cliphist/config"
 # Pin the laptop battery: Waybar's auto-detection also takes device batteries (wireless
 # mice, headsets; scope=Device) and crashes when one of them disappears
 bats=()

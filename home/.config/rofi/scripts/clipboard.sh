@@ -4,7 +4,8 @@
 # Enter = copy, Alt+P = preview image, Alt+Delete = remove entry, Alt+Shift+Delete = clear all history.
 
 theme="$HOME/.config/rofi/launchers/type-2/style-1.rasi"
-thumbs="${XDG_CACHE_HOME:-$HOME/.cache}/cliphist/thumbs"
+# Thumbnails next to the history, in RAM (see ~/.config/cliphist/config)
+thumbs="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/cliphist/thumbs"
 mkdir -p "$thumbs"
 
 # One rofi row per history entry; image entries get their decoded image as the row icon

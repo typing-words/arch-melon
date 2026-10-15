@@ -252,7 +252,7 @@ The modifiers follow one logic:
 | Battery | Battery pill | Remaining %, status, power draw, health and cycles |
 | Claude | Claude pill | Token use and API-price cost per day, week and month |
 | Windows | `Super + Tab` | Every open window with its icon; type to filter, Enter jumps to it |
-| Clipboard | `Super + Ctrl + V` | Text and image history with thumbnails |
+| Clipboard | `Super + Ctrl + V` | Text and image history with thumbnails, kept in RAM: gone at logout or reboot |
 | Keybinds | `Super + K` | Every Hyprland bind, read live, grouped; type a category to list it |
 | Emoji | `Super + Shift + E` | Grid of emojis, search by name or `@food`, `@flag`…, Enter types it |
 | Screenshot | `Print`, window title | Desktop, area, window, annotate, 5s / 10s delay |
