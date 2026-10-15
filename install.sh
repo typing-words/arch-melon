@@ -7,7 +7,7 @@
 #   2. Backs up every file of yours it is about to replace (~/.config/arch-melon/backup-<date>)
 #   3. Copies home/ into your home and fills in machine-specific values
 #   4. Installs the system files in system/ (each one listed first; old ones backed up)
-#   5. Enables the services
+#   5. Enables the services, then offers to reboot
 # Running it again updates the files and makes a new backup.
 
 set -euo pipefail
@@ -168,7 +168,7 @@ sudo papirus-folders -C paleorange --theme Papirus-Dark >/dev/null || true
 # --- Done -----------------------------------------------------------------------------
 say "Done"
 cat <<EOF
-    Log out and pick Hyprland at the login screen. Super+K lists every keybind.
+    After the reboot, pick Hyprland at the login screen. Super+K lists every keybind.
 
     Adapt to your machine (see $DATA/SYSTEM-CONFIG.txt):
       - Monitors: add yours at the top of ~/.config/hypr/hyprland.lua (hyprctl monitors)
@@ -177,3 +177,9 @@ cat <<EOF
 
     Your previous files are in $BACKUP
 EOF
+# The bar, wallpaper, notifications and services only start with a new session
+if ask "Reboot now?"; then
+    sudo systemctl reboot
+else
+    info "Reboot (or log out and back in) before using it."
+fi

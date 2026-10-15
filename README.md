@@ -310,7 +310,7 @@ It asks before each big step:
 1. Installs the packages in `packages/` (and `yay` for the AUR ones, if missing).
 2. Copies `home/` into your home. **Every file it replaces is backed up first** to `~/.config/arch-melon/backup-<date>/`.
 3. Lists the system files in `system/`, installs them if you say yes (old ones backed up too). What each does: [`docs/system-files.md`](docs/system-files.md).
-4. Enables the services, then log out and pick Hyprland.
+4. Enables the services and offers to reboot; then pick Hyprland at the login screen.
 
 Run it again to update; it makes a new backup each time.
 
