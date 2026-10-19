@@ -90,7 +90,7 @@
         "exec-if": "test \"$(cat ~/.cache/update-count 2>/dev/null)\" -gt 0",
         "tooltip-format": "{} pending updates (click to update)",
         // After yay finishes, recount and refresh this pill right away (signal 9)
-        "on-click": "kitty --class popup -e sh -c 'yay; ~/.local/bin/update-count; pkill -RTMIN+9 -x waybar'",
+        "on-click": "kitty --class popup -e ~/.local/bin/system-update",
         "signal": 9
     },
 

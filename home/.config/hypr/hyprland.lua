@@ -341,7 +341,7 @@ hl.bind(mainMod .. " + CTRL + P", hl.dsp.exec_cmd("$HOME/.config/rofi/scripts/po
 hl.bind(mainMod .. " + CTRL + ESCAPE", hl.dsp.exec_cmd("kitty --class popup -e btop"), { description = "System monitor (btop)" })
 hl.bind(mainMod .. " + CTRL + O", hl.dsp.exec_cmd("kitty --class popup -e lazydocker"), { description = "Docker manager (lazydocker)" })
 hl.bind(mainMod .. " + CTRL + D", hl.dsp.exec_cmd("makoctl mode -t do-not-disturb && pkill -RTMIN+8 -x waybar"), { description = "Toggle do not disturb" })
-hl.bind(mainMod .. " + CTRL + U", hl.dsp.exec_cmd("kitty --class popup -e sh -c 'yay; ~/.local/bin/update-count; pkill -RTMIN+9 -x waybar'"), { description = "Update system (yay)" })
+hl.bind(mainMod .. " + CTRL + U", hl.dsp.exec_cmd("kitty --class popup -e $HOME/.local/bin/system-update"), { description = "Update system (yay)" })
 hl.bind(mainMod .. " + CTRL + W", hl.dsp.exec_cmd("$HOME/.config/hypr/scripts/random-wallpaper.sh"), { description = "Random wallpaper" })
 hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd("pkill -x waybar; sleep 0.5; waybar"), { description = "Restart Waybar" })
 hl.bind(mainMod .. " + CTRL + M", hl.dsp.exec_cmd("~/.local/bin/osd mic mute"), { description = "Mute microphone" })

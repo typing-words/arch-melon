@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# System update in a floating kitty (Super+Ctrl+U and the updates pill):
+# lists what will be updated, runs yay, then refreshes the updates pill.
+
+orange=$'\e[1;38;2;255;158;100m'; blue=$'\e[38;2;122;162;247m'; dim=$'\e[38;2;86;95;137m'
+green=$'\e[38;2;158;206;106m'; reset=$'\e[0m'
+
+printf '\n  %s󰏗  System update%s\n\n  %sChecking for updates...%s' "$orange" "$reset" "$dim" "$reset"
+repo=$(checkupdates 2>/dev/null)   # safe: uses a temp copy of the package database
+aur=$(yay -Qua 2>/dev/null)
+printf '\r\e[K'
+
+# "name  old -> new", aligned, one section per source
+section() {
+    local title=$1 list=$2
+    [ -z "$list" ] && return
+    printf '  %s%s (%s)%s\n' "$blue" "$title" "$(wc -l <<<"$list")" "$reset"
+    awk -v d="$dim" -v r="$reset" '{ printf "    %-28s %s%s -> %s%s\n", $1, d, $2, $4, r }' <<<"$list"
+    echo
+}
+
+if [ -z "$repo$aur" ]; then
+    printf '  %sEverything is up to date.%s\n' "$green" "$reset"
+else
+    section "Official repos" "$repo"
+    section "AUR" "$aur"
+    yay
+fi
+
+~/.local/bin/update-count
+pkill -RTMIN+9 -x waybar
+printf '\n  %sPress Enter to close%s ' "$dim" "$reset"
+read -r

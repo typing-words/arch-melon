@@ -55,6 +55,7 @@ Helper scripts (each prints usage in its header comment):
 | `keepawake` | Keep Awake: no screen lock or suspend while on | systemd-inhibit |
 | `nopasswd` | Passwordless sudo for 15 min, or on/off (Super+Ctrl+S / Super+Ctrl+Alt+S) | pkexec, polkit policy in `~/.config/arch-melon/system` |
 | `update-count` | Pending updates for the bar and prompt (hourly user timer) | pacman-contrib, yay |
+| `system-update` | Update window (Super+Ctrl+U, updates pill): lists updates, runs yay, refreshes the count | pacman-contrib, yay |
 | `waybar-ccusage`, `claude-costs` | Claude plan usage pill and cost table (optional) | ccusage, a Claude Code login |
 
 ## 3. Every change

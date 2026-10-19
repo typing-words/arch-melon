@@ -177,8 +177,8 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
       Super+Ctrl+Esc .... System monitor (btop, floating)
       Super+Ctrl+O ...... Docker manager (lazydocker, floating)
       Super+Ctrl+D ...... Do not disturb on/off (same as the Waybar bell)
-      Super+Ctrl+U ...... Update the system (yay, floating; same as the
-                          updates pill)
+      Super+Ctrl+U ...... Update the system (system-update: lists what will
+                          be updated, then yay; same as the updates pill)
       Super+Ctrl+W ...... New random wallpaper on every monitor
       Super+Ctrl+R ...... Restart Waybar (if it freezes or disappears)
       Super+Ctrl+M ...... Mute / unmute the microphone (osd popup)
@@ -238,8 +238,9 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
                           hidden on empty workspaces. Click: screenshot menu.
   Center
     custom/updates ...... Yellow "󰏗 N", only when updates are pending (count
-                          from update-count). Click: yay in a floating kitty;
-                          when yay ends the count refreshes at once (signal 9).
+                          from update-count). Click: system-update in a
+                          floating kitty (lists the updates, runs yay); when it
+                          ends the count refreshes at once (signal 9).
     custom/dnd .......... Bell, green while notifications show. Click toggles
                           mako do-not-disturb (bell turns red with zZ). Right click: restore the last
                           dismissed notification.

@@ -148,7 +148,7 @@ red needs it now.
 | window | Focused window title, dim | Screenshot menu | Hidden on empty workspaces |
 | custom/sudo | Red `󰒃` while sudo needs no password | Turn it off | Hidden otherwise · hover: until when |
 | custom/recording | Red `●` while recording the screen | Stop and save | Hidden otherwise |
-| custom/updates | `󰏗 N`, only when there are updates | yay in a floating kitty | Count refreshes right after |
+| custom/updates | `󰏗 N`, only when there are updates | Update list + yay in a floating kitty | Count refreshes right after |
 | custom/dnd | Bell (green; red with zZ in do-not-disturb) | Toggle do-not-disturb | Right: restore last notification |
 | clock | `Sat 10 Oct  14:05`, orange bold | | Hover: calendar with ISO weeks · Wheel: month · Right: month/year · Middle: today |
 | custom/keepawake | Keep Awake cup: green on (no lock or suspend), red off | Toggle | Also `Super + Ctrl + I` |
@@ -269,6 +269,7 @@ All in `~/.local/bin` unless noted.
 |---|---|
 | `osd` | Volume, mic and brightness keys. Volume shows a small mako progress popup; brightness moves every screen's backlight together |
 | `update-count` | Counts pending updates (repo + AUR) for the bar and the prompt. Runs hourly (systemd user timer) |
+| `system-update` | `Super + Ctrl + U` and the updates pill: lists pending updates (repo and AUR, old → new), runs yay, refreshes the count |
 | `waybar-ccusage` | Claude plan usage for the bar, cached so all bars share one request every 5 minutes |
 | `claude-costs` | Weekly table of Claude tokens and what they would cost at API prices |
 | `screenrec` | Screen recording toggle (region or monitor) with gpu-screen-recorder; red dot in Waybar while recording |
