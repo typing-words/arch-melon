@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1
+
+- `uninstall.sh`: deletes what arch-melon added and restores your original files from the
+  oldest backup (system files only after asking). `install.sh` now records the files it
+  creates in `~/.config/arch-melon/created` for this.
+- Update window (`Super + Ctrl + U`, updates pill): lists the pending updates (repo and
+  AUR, old → new) before yay asks for the password; "up to date" without asking at all.
+- AI pill no longer disappears when the 5-hour window has not started yet.
+- Every script is checked by ShellCheck on each push (GitHub Actions).
+
 ## 0.1.0
 
 First public version.

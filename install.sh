@@ -8,19 +8,21 @@
 #   3. Copies home/ into your home and fills in machine-specific values
 #   4. Installs the system files in system/ (each one listed first; old ones backed up)
 #   5. Enables the services, then offers to reboot
-# Running it again updates the files and makes a new backup.
+# Running it again updates the files and makes a new backup. ./uninstall.sh undoes it.
 
 set -euo pipefail
 
 REPO=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 DATA="$HOME/.config/arch-melon"
 BACKUP="$DATA/backup-$(date +%Y%m%d-%H%M%S)"
+CREATED="$DATA/created"   # files that did not exist before arch-melon (uninstall.sh deletes them)
 
 say()  { printf '\n\033[1;38;2;255;158;100m==>\033[0m \033[1m%s\033[0m\n' "$*"; }
 info() { printf '    %s\n' "$*"; }
 warn() { printf '\033[38;2;224;175;104m    ! %s\033[0m\n' "$*"; }
 ask()  { local a; read -rp "    $1 [Y/n] " a; [[ -z $a || $a =~ ^[Yy] ]]; }
 pkgs() { grep -v -e '^#' -e '^$' "$REPO/packages/$1"; }
+created() { grep -qxF -- "$1" "$CREATED" 2>/dev/null || echo "$1" >> "$CREATED"; }
 
 # --- Checks ---------------------------------------------------------------------------
 [ -f /etc/arch-release ] || { echo "arch-melon is for Arch Linux."; exit 1; }
@@ -38,7 +40,8 @@ ask "Continue?" || exit 0
 
 # --- 1. Packages ----------------------------------------------------------------------
 say "Packages"
-sudo pacman -S --needed $(pkgs core-repo.txt)
+mapfile -t repo_pkgs < <(pkgs core-repo.txt)
+sudo pacman -S --needed "${repo_pkgs[@]}"
 
 if ! command -v yay >/dev/null; then
     info "Installing yay (AUR helper)"
@@ -48,7 +51,8 @@ if ! command -v yay >/dev/null; then
     (cd "$tmp/yay-bin" && makepkg -si --noconfirm)
     rm -rf "$tmp"
 fi
-yay -S --needed $(pkgs core-aur.txt)
+mapfile -t aur_pkgs < <(pkgs core-aur.txt)
+yay -S --needed "${aur_pkgs[@]}"
 
 # --- 2 + 3. Your files ----------------------------------------------------------------
 say "Files in your home"
@@ -62,6 +66,7 @@ while IFS= read -r -d '' src; do
         cp -a "$dest" "$BACKUP/home/$rel"
         backed=$((backed + 1))
     fi
+    [ -e "$dest" ] || created "$dest"
     mkdir -p "$(dirname "$dest")"
     cp -a "$src" "$dest"
 done < <(find "$REPO/home" -type f -print0)
@@ -85,15 +90,18 @@ if [ ${#bats[@]} -eq 1 ]; then
     info "Waybar battery: ${bats[0]}"
 fi
 if [ ! -f "$HOME/.face" ]; then
+    created "$HOME/.face"
     cp "$REPO/assets/defaults/face.png" "$HOME/.face"
     info "Profile picture: default one in ~/.face (replace it with yours, then run ./install.sh again)"
 fi
 # Waybar can't round images with CSS: keep a round copy of ~/.face
+[ -e "$HOME/.config/waybar/avatar.png" ] || created "$HOME/.config/waybar/avatar.png"
 magick "$HOME/.face" -resize 128x128^ -gravity center -extent 128x128 \
     \( -size 128x128 xc:black -fill white -draw "circle 64,64 64,0" \) \
     -alpha off -compose CopyOpacity -composite "$HOME/.config/waybar/avatar.png"
 mkdir -p "$HOME/Pictures/Wallpapers" "$HOME/Pictures/Screenshots" "$HOME/Videos/Recordings"
 if [ -z "$(ls -A "$HOME/Pictures/Wallpapers")" ]; then
+    created "$HOME/Pictures/Wallpapers/arch-melon.jpg"
     cp "$REPO/assets/defaults/wallpaper.jpg" "$HOME/Pictures/Wallpapers/arch-melon.jpg"
     info "Wallpaper: put your own images in ~/Pictures/Wallpapers (one is picked at random)"
 fi
@@ -132,10 +140,13 @@ if ask "Install them? (existing ones are backed up)"; then
         if sudo test -e "/$rel"; then
             mkdir -p "$BACKUP/system/$(dirname "$rel")"
             sudo cp -a "/$rel" "$BACKUP/system/$rel"
+        else
+            created "/$rel"
         fi
         sudo install -D -m 0644 "$src" "/$rel"
     done < <(find "$REPO/system" -type f -print0)
     for name in nopasswd-15min nopasswd-nolimit; do
+        [ -e "/usr/local/bin/$name" ] || created "/usr/local/bin/$name"
         sudo install -D -m 0755 "$REPO/system/usr/local/bin/nopasswd-root" "/usr/local/bin/$name"
     done
     info "Installed (backups of the old ones in $BACKUP/system)"
@@ -177,7 +188,7 @@ cat <<EOF
       - Browser and mail app: "browser" and "mailClient" in the same file
       - Profile picture: ~/.face, then run ./install.sh again for the round copy
 
-    Your previous files are in $BACKUP
+    Your previous files are in $BACKUP (./uninstall.sh puts them back)
 EOF
 # The bar, wallpaper, notifications and services only start with a new session
 if ask "Reboot now?"; then

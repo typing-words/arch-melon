@@ -8,6 +8,7 @@
 <img src="https://img.shields.io/badge/Hyprland-1f2335?style=for-the-badge&logo=hyprland&logoColor=ff9e64" alt="Hyprland">
 <img src="https://img.shields.io/badge/Wayland-1f2335?style=for-the-badge&logo=wayland&logoColor=e0af68" alt="Wayland">
 <img src="https://img.shields.io/badge/Tokyo_Night-1f2335?style=for-the-badge&logoColor=c0caf5" alt="Tokyo Night">
+<a href="https://github.com/typing-words/arch-melon/actions/workflows/shellcheck.yml"><img src="https://img.shields.io/github/actions/workflow/status/typing-words/arch-melon/shellcheck.yml?style=for-the-badge&label=ShellCheck&labelColor=1f2335&color=9ece6a" alt="ShellCheck"></a>
 
 <br>
 
@@ -315,6 +316,17 @@ It asks before each big step:
 
 Run it again to update; it makes a new backup each time.
 
+### Uninstall
+
+```bash
+./uninstall.sh
+```
+
+Deletes the files arch-melon added, puts back the ones it replaced (from the oldest
+backup, so your originals) and resets the GTK look. System files are shown first and only
+changed if you say yes. Packages, services and the backups stay; it tells you how to
+remove them.
+
 ### Adapt it to your machine
 
 | What | Where |
@@ -339,6 +351,7 @@ already met. Claude loads it whenever a task touches this setup.
 
 ```
 install.sh        Installer
+uninstall.sh      Undoes it: removes what it added, restores your backed-up files
 packages/         Package lists (official repos and AUR)
 home/             Copied into $HOME: .config/{hypr,waybar,rofi,kitty,mako,...}, .local/bin scripts, fonts
 system/           Files for /etc and /usr (logind, Ly, iwd, polkit, faillock, nopasswd)

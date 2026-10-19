@@ -6,7 +6,7 @@
 
 scripts="$HOME/.config/rofi/scripts"
 export APPS_LIST="${XDG_RUNTIME_DIR:-/tmp}/rofi-apps.list"
-APPS_LIST= "$scripts/apps.sh" > "$APPS_LIST"
+APPS_LIST='' "$scripts/apps.sh" > "$APPS_LIST"   # empty: apps.sh builds the list
 count=$(tail -n +2 "$APPS_LIST" | wc -l)
 columns=$(( count < 1 ? 1 : (count > 10 ? 10 : count) ))
 
