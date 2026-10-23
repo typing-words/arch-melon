@@ -4,7 +4,8 @@
 # Puts your machine back the way it was before the first ./install.sh:
 #   1. Files arch-melon added (listed in ~/.config/arch-melon/created) are deleted
 #   2. Files it replaced come back from the oldest backup (~/.config/arch-melon/backup-<date>)
-#   3. The update counter timer is disabled and the GNOME look settings are reset
+#   3. The update counter and AI pill refresh units are disabled and the GNOME look
+#      settings are reset
 # Packages, services you enabled (bluetooth, iwd, Ly) and the backups themselves are left
 # alone; the end of the run says how to remove them.
 
@@ -91,12 +92,12 @@ fi
 
 # --- 3. Services and theme -------------------------------------------------------------
 say "Services and theme"
-systemctl --user disable --now update-count.timer 2>/dev/null || true
+systemctl --user disable --now update-count.timer claude-token.path 2>/dev/null || true
 systemctl --user daemon-reload
 for key in color-scheme gtk-theme icon-theme cursor-theme cursor-size; do
     gsettings reset org.gnome.desktop.interface "$key"
 done
-info "Update counter off, GTK look back to defaults"
+info "Update counter and AI pill refresh off, GTK look back to defaults"
 
 # The list of added files has been used; keep the backups
 rm -f "$CREATED"

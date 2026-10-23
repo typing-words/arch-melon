@@ -104,8 +104,9 @@ argument prints the module JSON (`{"text":""}` hides the pill).
 | 10 | custom/keepawake | `keepawake` |
 | 11 | custom/recording | `screenrec` |
 | 12 | custom/sudo | `nopasswd` |
+| 13 | custom/claude | `claude-token.path` (user unit, when Claude Code renews its login) |
 
-Next free signal: **13**. Check with `grep -rn RTMIN ~/.local/bin ~/.config`.
+Next free signal: **14**. Check with `grep -rn RTMIN ~/.local/bin ~/.config`.
 
 ## 6. Adapting to a new machine
 Hardware-specific values, where they are and how to find the right one:

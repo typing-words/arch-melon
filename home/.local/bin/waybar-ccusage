@@ -12,8 +12,13 @@ creds="$HOME/.claude/.credentials.json"
 cache="${XDG_RUNTIME_DIR:-/tmp}/claude-usage.json"
 max_age=300
 
+# One bar at a time: the others wait here, then find the cache fresh
+exec 9>"$cache.lock"
+flock 9
 age=$(( $(date +%s) - $(stat -c %Y "$cache" 2>/dev/null || echo 0) ))
-if (( age >= max_age )); then
+# Also ask right away when Claude Code renewed the login after the last try (an expired
+# token after a night off; claude-token.path then signals the bar, signal 13)
+if (( age >= max_age )) || [ "$creds" -nt "$cache" ]; then
     token=$(jq -r '.claudeAiOauth.accessToken // empty' "$creds" 2>/dev/null)
     fresh=$(curl -sf -m 10 https://api.anthropic.com/api/oauth/usage \
         -H "Authorization: Bearer $token" \
@@ -25,6 +30,7 @@ if (( age >= max_age )); then
     fi
 fi
 usage=$(cat "$cache" 2>/dev/null)
+exec 9>&-
 if ! jq -e .five_hour >/dev/null 2>&1 <<<"$usage"; then
     # Never fetched yet (offline, rate limited or expired login; Claude Code refreshes it)
     echo '{"text":"󰚩 AI","class":"idle","tooltip":"Usage unavailable (offline, rate limited, or open Claude Code to refresh the login)"}'

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- AI pill fills in as soon as Claude Code is opened after boot, instead of up to ~6 minutes
+  later: the saved login expires overnight, and a new `claude-token.path` user unit now
+  refreshes the pill (signal 13) the moment Claude Code renews it.
+
 ## 0.1.1
 
 - `uninstall.sh`: deletes what arch-melon added and restores your original files from the

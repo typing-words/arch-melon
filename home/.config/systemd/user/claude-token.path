@@ -1,0 +1,8 @@
+[Unit]
+Description=Refresh the AI pill when Claude Code renews its login
+
+[Path]
+PathChanged=%h/.claude/.credentials.json
+
+[Install]
+WantedBy=default.target

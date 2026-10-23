@@ -256,9 +256,9 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
     custom/claude ....... "󰚩 S% · W%": Claude plan left, 5-hour session and
                           weekly. Yellow at ≤25%, red at ≤10%. Hover: reset
                           times and today's tokens. Click: rofi cost summary.
-                          Data: waybar-ccusage script (see Scripts). Hidden
-                          without a Claude Code login; logged in but no data
-                          yet: a dim "󰚩 AI".
+                          Data: waybar-ccusage script (see Scripts), signal
+                          13. Hidden without a Claude Code login; logged in
+                          but no data yet: a dim "󰚩 AI".
     network ............. Green. Wi-Fi: "󰤨 SSID | speed"; cable: "󰈀 speed".
                           Hover: signal, IP, down/up. Click: impala (floating).
     battery ............. The laptop battery, pinned by install.sh ("bat"; device batteries like wireless
@@ -499,6 +499,11 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
                           %. Cached in $XDG_RUNTIME_DIR/claude-usage.json:
                           max one request every 5 minutes for all 3 bars.
                           Today's tokens come from ccusage (offline).
+    When ................ Every 2 minutes, and at once when Claude Code renews
+                          its login (claude-token.path user unit watches
+                          ~/.claude/.credentials.json, signal 13): the saved
+                          login expires overnight, so after boot the pill
+                          fills in as soon as Claude Code is opened.
   claude-costs
     What ................ Text table: the 7 days of the current week (aligned
                           to the weekly limit reset, Wed->Tue), input/output/

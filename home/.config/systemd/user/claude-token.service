@@ -1,0 +1,7 @@
+[Unit]
+Description=Refresh the AI pill in Waybar
+
+[Service]
+Type=oneshot
+# "-": no Waybar running is fine
+ExecStart=-/usr/bin/pkill -RTMIN+13 -x waybar

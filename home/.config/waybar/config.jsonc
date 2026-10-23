@@ -158,6 +158,8 @@
         "exec": "~/.local/bin/waybar-ccusage",
         "return-type": "json",
         "interval": 120,
+        // claude-token.path sends signal 13 as soon as Claude Code renews its login
+        "signal": 13,
         // Last 7 days, this week (Monday to Sunday) and this month; costs are API-price estimates
         "on-click": "~/.config/rofi/scripts/claude.sh"
     },

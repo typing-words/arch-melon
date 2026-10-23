@@ -168,7 +168,7 @@ elif ask "Enable Ly as the login screen?"; then
     sudo systemctl enable ly@tty2
 fi
 systemctl --user daemon-reload
-systemctl --user enable --now update-count.timer
+systemctl --user enable --now update-count.timer claude-token.path
 systemctl --user enable hyprpolkitagent
 
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
