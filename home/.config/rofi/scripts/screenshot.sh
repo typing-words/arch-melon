@@ -36,6 +36,7 @@ case "$chosen" in
     "$option_1") hyprshot -m output -m active -o "$dir" ;;
     "$option_2") hyprshot -z -m region -o "$dir" ;;
     "$option_3") hyprshot -m window -o "$dir" ;;
+    # --raw, not -r: hyprshot's getopt makes -r take an argument and nothing reaches Satty
     "$option_4") hyprshot -z -m region --raw | satty --filename - --early-exit --copy-command wl-copy \
                      --output-filename "$dir/satty-%Y%m%d-%H%M%S.png" ;;
     "$option_5") countdown 5;  hyprshot -m output -m active -o "$dir" ;;

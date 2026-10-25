@@ -42,6 +42,7 @@ repo like `~/.dotfiles`) and follow their workflow; if unsure, ask.
 | Notifications | `~/.config/mako/config` |
 | Terminal, prompt, shell | `~/.config/kitty/kitty.conf`, `~/.config/starship.toml`, `~/.bashrc`, `~/.inputrc` |
 | Helper scripts | `~/.local/bin/` |
+| User units (update counter, AI pill refresh) | `~/.config/systemd/user/` |
 | Copies of system files (paths mirror `/`) | `~/.config/arch-melon/system/etc/...`, `usr/...` |
 | Package lists | `packages/core-repo.txt`, `core-aur.txt` in the repo |
 
@@ -107,6 +108,8 @@ argument prints the module JSON (`{"text":""}` hides the pill).
 | 13 | custom/claude | `claude-token.path` (user unit, when Claude Code renews its login) |
 
 Next free signal: **14**. Check with `grep -rn RTMIN ~/.local/bin ~/.config`.
+Send only a signal some module has in its `"signal"`: an unassigned one, like
+`-RTMIN+0`, can kill Waybar. To refresh everything use `pkill -SIGUSR2 -x waybar`.
 
 ## 6. Adapting to a new machine
 Hardware-specific values, where they are and how to find the right one:
@@ -162,6 +165,9 @@ returns `PAM_AUTHTOK_ERR`, and `system-auth` sends that to `pam_faillock authfai
 Fix: `/etc/pam.d/polkit-1` with the auth lines of `system-auth` but
 `[success=1 authtok_err=die default=bad]` on `pam_unix.so` (copy in
 `~/.config/arch-melon/system/etc/pam.d/`). Wrong passwords still count.
+Upstream: polkit-org/polkit#713, fix proposed in #719. Once an Arch polkit
+release contains it, the workaround can go (`pacman -Q polkit`, then check
+the polkit release notes).
 
 **Polkit window text** (hyprpolkitagent 0.2 + hyprtoolkit 0.6; recheck on newer versions)
 - The action's `<message>` shows only when the request has no command line;
@@ -193,6 +199,10 @@ like vim or Claude Code alone). Ctrl combos go in `~/.inputrc` (start it with
 Hyprland has no minimize and the bar shows no tray, so an app set to "start
 minimized" or "minimize/close to tray" runs invisibly; the second launch asks
 the running copy for a window. Turn that option off in the app.
+
+**Region screenshot to Satty does nothing**
+Use `hyprshot ... --raw`, never `-r`: hyprshot's getopt makes `-r` take an
+argument, so it swallows the next option and nothing reaches Satty.
 
 **Notifications don't show**
 `makoctl mode`: `do-not-disturb` hides them (Super+Ctrl+D). `makoctl restore`
