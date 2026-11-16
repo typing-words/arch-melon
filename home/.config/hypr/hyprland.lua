@@ -264,7 +264,9 @@ hl.config({
         kb_options = "lv3:ralt_alt",    -- Right Alt is a normal Alt, not AltGr
         kb_rules   = "",
 
-        follow_mouse = 1,
+        -- 2: the keyboard goes where you last clicked; hovering a window (a floating
+        -- popup, say) doesn't steal it. The wheel still scrolls whatever is under the cursor
+        follow_mouse = 2,
 
         sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
 

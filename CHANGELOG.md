@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Click to focus (`follow_mouse = 2`): the keyboard stays on the window you last clicked.
+  Before, leaving the mouse over a floating popup (the update window, say) sent shortcuts
+  like `Ctrl + Shift + V` to it instead of the app behind, so their dialogs never opened.
 - AI pill fills in as soon as Claude Code is opened after boot, instead of up to ~6 minutes
   later: the saved login expires overnight, and a new `claude-token.path` user unit now
   refreshes the pill (signal 13) the moment Claude Code renews it.

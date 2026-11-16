@@ -97,6 +97,11 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
                           ' + space = '). Right Alt is a normal Alt
                           (kb_options lv3:ralt_alt), not AltGr.
     Touchpad ............ 3-finger horizontal swipe changes workspace.
+    Focus ............... Click to focus (follow_mouse = 2): keys go to the
+                          window you last clicked, not the one under the
+                          mouse, so a floating popup left open doesn't take
+                          shortcuts meant for the window behind it. The
+                          wheel scrolls whatever is under the cursor.
   Window rules
     waybar-popups ....... Windows with class "popup" (kitty --class popup)
                           and pavucontrol float centered at 1000x640.
