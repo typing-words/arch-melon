@@ -4,6 +4,7 @@
 
 - Picture-in-picture (Chrome, Firefox and their relatives) floats pinned in the bottom-right
   corner and keeps the video's shape when resized, instead of opening as a tiled window.
+  Recognized with the browser in English, Spanish, German or French.
 - Auto HDR off (`render.cm_auto_hdr = 0`): a fullscreen HDR video (YouTube) no longer
   switches HDR screens into a mode they can't show in 8-bit, with a "not in 10-bit mode"
   warning.

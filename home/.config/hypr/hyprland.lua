@@ -579,11 +579,12 @@ hl.window_rule({
     center = true,
 })
 
--- Picture-in-picture (Chrome, Firefox) floats in the bottom-right corner, stays on every
--- workspace, keeps the video's shape when resized and doesn't take the keyboard
+-- Picture-in-picture (Chromium and Firefox browsers; titles in English, Spanish, German and
+-- French) floats in the bottom-right corner, stays on every workspace, keeps the video's
+-- shape when resized and doesn't take the keyboard
 hl.window_rule({
     name  = "picture-in-picture",
-    match = { title = "^(Picture[- ]in[- ][Pp]icture)$" },
+    match = { title = "^(Picture[- ]in[- ][Pp]icture|Imagen en imagen|Pantalla en pantalla|Bild[- ]im[- ]Bild|Mode PIP \\(Picture-in-Picture\\)|Incrustation vidéo)$" },
 
     float             = true,
     pin               = true,

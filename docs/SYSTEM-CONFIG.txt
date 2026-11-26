@@ -109,10 +109,14 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
   Window rules
     waybar-popups ....... Windows with class "popup" (kitty --class popup)
                           and pavucontrol float centered at 1000x640.
-    picture-in-picture .. Title "Picture in picture" (Chromium browsers) or
-                          "Picture-in-Picture" (Firefox): floats bottom-right,
-                          pinned, keeps its aspect ratio when resized, no
-                          initial focus.
+    picture-in-picture .. Floats bottom-right, pinned, keeps its aspect ratio
+                          when resized, no initial focus. Matched by title,
+                          which depends on the browser's language:
+                          Chromium "Picture in picture", "Imagen en imagen"
+                          (es), "Pantalla en pantalla" (es-419), "Bild im
+                          Bild" (de), "Mode PIP (Picture-in-Picture)" (fr);
+                          Firefox "Picture-in-Picture", "Bild-im-Bild" (de),
+                          "Incrustation vidéo" (fr).
     suppress-maximize ... Apps cannot maximize themselves.
   Layer rules
     rofi-blur ........... Blur behind rofi.
