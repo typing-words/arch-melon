@@ -68,6 +68,10 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
                           scale. Add one hl.monitor block per screen at the
                           top of hyprland.lua (names: hyprctl monitors).
     Workspaces .......... Not pinned; an hl.workspace_rule example is there.
+    HDR ................. Auto HDR off (render.cm_auto_hdr = 0): fullscreen
+                          HDR video stays SDR. Auto HDR needs 10-bit, which
+                          breaks some screen capture; without it Hyprland
+                          only warns "not in 10-bit mode".
   Autostart
     random-wallpaper.sh . One random wallpaper per monitor (see Scripts).
     cliphist ............ wl-paste watchers store text and image history.
@@ -105,6 +109,10 @@ Where it comes from: the arch-melon repo (see INSTALLATION & FILES).
   Window rules
     waybar-popups ....... Windows with class "popup" (kitty --class popup)
                           and pavucontrol float centered at 1000x640.
+    picture-in-picture .. Title "Picture in picture" (Chromium browsers) or
+                          "Picture-in-Picture" (Firefox): floats bottom-right,
+                          pinned, keeps its aspect ratio when resized, no
+                          initial focus.
     suppress-maximize ... Apps cannot maximize themselves.
   Layer rules
     rofi-blur ........... Blur behind rofi.

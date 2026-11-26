@@ -244,6 +244,14 @@ hl.config({
     },
 })
 
+-- A fullscreen HDR video (YouTube) keeps the screen in SDR. Auto HDR needs the panel in
+-- 10-bit, which breaks some screen capture tools; without it Hyprland only shows a warning
+hl.config({
+    render = {
+        cm_auto_hdr = 0,
+    },
+})
+
 -- Pressing the key of the workspace you are already on jumps back to the previous one
 hl.config({
     binds = {
@@ -569,6 +577,19 @@ hl.window_rule({
     float  = true,
     size   = "1000 640",
     center = true,
+})
+
+-- Picture-in-picture (Chrome, Firefox) floats in the bottom-right corner, stays on every
+-- workspace, keeps the video's shape when resized and doesn't take the keyboard
+hl.window_rule({
+    name  = "picture-in-picture",
+    match = { title = "^(Picture[- ]in[- ][Pp]icture)$" },
+
+    float             = true,
+    pin               = true,
+    keep_aspect_ratio = true,
+    no_initial_focus  = true,
+    move              = "monitor_w-window_w-20 monitor_h-window_h-20",
 })
 
 -- Hyprland-run windowrule

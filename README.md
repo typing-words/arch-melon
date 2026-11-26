@@ -118,7 +118,7 @@ red needs it now.
 
 | Part | Tool | Look |
 |---|---|---|
-| Window manager | Hyprland | Gaps 5/10, orange→blue gradient border, blur, shadows; click to focus |
+| Window manager | Hyprland | Gaps 5/10, orange→blue gradient border, blur, shadows; click to focus; picture-in-picture floats pinned in a corner |
 | Bar | Waybar | Transparent bar, one pill per module, one bar per monitor |
 | Menus | Rofi (adi1090x themes) | Shared `rice.rasi` colors, orange selection, Papirus icons |
 | Terminal | Kitty | Black background, orange beam cursor with trail, powerline tabs, copy on select |

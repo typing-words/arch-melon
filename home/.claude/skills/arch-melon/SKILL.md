@@ -204,6 +204,14 @@ the running copy for a window. Turn that option off in the app.
 Use `hyprshot ... --raw`, never `-r`: hyprshot's getopt makes `-r` take an
 argument, so it swallows the next option and nothing reaches Satty.
 
+**One screen looks washed out (gray, no color) after a fullscreen video**
+It was left in HDR mode: auto HDR (`render.cm_auto_hdr`) was turned off while a
+fullscreen HDR video had switched that screen, so Hyprland never switched it back.
+`hyprctl reload` alone doesn't help (a monitor is reapplied only when its rule
+changed): add a value to its `hl.monitor` block (e.g. `sdrbrightness = 1.01`),
+reload, remove it, reload again. Logging out also fixes it. Auto HDR stays off:
+it needs the panel in 10-bit (`bitdepth = 10`), which breaks some screen capture.
+
 **Notifications don't show**
 `makoctl mode`: `do-not-disturb` hides them (Super+Ctrl+D). `makoctl restore`
 brings the last one back.
